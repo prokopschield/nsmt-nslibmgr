@@ -281,7 +281,7 @@ type success = boolean;
 
 export function _upload_dir (path: string, unlink: boolean = false): Promise<success> {
 	return new Promise(async (resolve, reject) => {
-		let hasFailed = false;
+		let hasFailed = 0;
 		const stat = statSync(path);
 		if (!stat.isDirectory()) {
 			return resolve(!!_upload_file(path, unlink));
@@ -291,10 +291,10 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 			const file = resolvePath(path, filename);
 			const stat = statSync(file);
 			if (stat.isDirectory()) {
-				hasFailed ||= !await _upload_dir(file, unlink)
+				hasFailed += +!await _upload_dir(file, unlink)
 					.catch(_error => false);
 			} else {
-				hasFailed ||= !await _upload_file(file, unlink)
+				hasFailed += +!await _upload_file(file, unlink)
 					.catch(_error => false);
 			}
 		}
