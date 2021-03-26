@@ -12,6 +12,7 @@ export declare function creativeHandler(path?: string): Promise<boolean>;
 export declare function publishHandler(path?: string): Promise<boolean>;
 export declare function testHandler(path?: string): Promise<boolean>;
 export declare function compileHandler(path?: string): Promise<boolean>;
+export declare function declarationHandler(path?: string): Promise<boolean>;
 export declare function _upload_file(path: string, unlink?: boolean): Promise<string>;
 declare type success = boolean;
 export declare function _upload_dir(path: string, unlink?: boolean): Promise<success>;

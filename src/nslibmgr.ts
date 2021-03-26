@@ -1,7 +1,23 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, createReadStream, statSync, unlink as unlinkFile, rmdir as unlinkDir } from 'fs';
+import {
+	existsSync,
+	mkdirSync,
+	readFileSync,
+	readdirSync,
+	writeFileSync,
+	createReadStream,
+	statSync,
+	unlink as unlinkFile,
+	rmdir as unlinkDir
+} from 'fs';
 import https from 'https';
-import { resolve as resolvePath, relative as relativePath } from 'path';
-import { exec } from 'child_process';
+import {
+	basename,
+	resolve as resolvePath,
+	relative as relativePath
+} from 'path';
+import {
+	exec
+} from 'child_process';
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -24,6 +40,8 @@ export const DEFAULTS = {
 		'lib',
 		'src',
 		'tests',
+		'types',
+		'util',
 		'package.json',
 		'LICENSE.md',
 		'LICENSE',
@@ -104,7 +122,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 			[key: string]: string;
 		} = {};
 		if (existsSync(packjsonpath)) {
-			defaults = require(packjsonpath);
+			defaults = JSON.parse(readFileSync(packjsonpath, 'utf-8'));
 		}
 		const name = (await ask(`Package name? (${defaults["name"] || ""})`)) || defaults['name'] || '';
 		if (!name) return reject('Please specify a package.')
@@ -207,6 +225,28 @@ export function compileHandler (path: string = '.'): Promise<boolean> {
 			process.stdout.write(stdout);
 			resolve(!(stderr || error));
 		});
+		if (child.stdout && child.stderr) {
+			child.stdout.pipe(process.stdout);
+			child.stderr.pipe(process.stdout);
+		}
+	});
+}
+
+export async function declarationHandler (path: string = '.'): Promise<boolean> {
+	return new Promise((resolve, _reject) => {
+		const pacjsonpath = resolvePath(path, 'package.json');
+		const pacjson = JSON.parse(readFileSync(pacjsonpath, 'utf-8'));
+		const { main } = pacjson;
+		const entry = relativePath(path, main);
+		const child = exec(`tsc --target ES2020 --module CommonJS --declaration --AllowJS --outDir ./types --esModuleInterop --strict --forceConsistentCasingInFilenames */**/*.js */**/*ts`, (error, stdout, stderr) => {
+			resolve(!(stderr || error));
+		});
+		if (child.stdout && child.stderr) {
+			child.stdout.pipe(process.stdout);
+			child.stderr.pipe(process.stdout);
+		}
+		pacjson.types = `types/${basename(entry).split('.').slice(0, -1).join('.')}.d.ts`;
+		writeFileSync(pacjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 	});
 }
 
