@@ -135,7 +135,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 			...defaults,
 			name,
 			"description": await ask(`Description (${defaults['description'] || ''})`),
-			"version": defaults?.version || "0.0.-1",
+			"version": defaults?.version || "0.0.0",
 			"main": "lib/index",
 			"bin": {
 				[name]: 'lib/cli.js',
@@ -158,6 +158,10 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 			}
 		}
 		writeFileSync(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
+		await new Promise(resolve => {
+			exec('npm init -y', resolve);
+		});
+		writeFileSync(packjsonpath, JSON.stringify(JSON.parse(readFileSync(packjsonpath, 'utf-8')), null, '\t') + '\n');
 		return resolve(true);
 	});
 }
