@@ -7,16 +7,16 @@ import {
 	createReadStream,
 	statSync,
 	unlink as unlinkFile,
-	rmdir as unlinkDir
+	rmdir as unlinkDir,
 } from 'fs';
 import https from 'https';
 import {
 	basename,
 	resolve as resolvePath,
-	relative as relativePath
+	relative as relativePath,
 } from 'path';
 import {
-	exec
+	exec,
 } from 'child_process';
 
 export enum ERROR {
