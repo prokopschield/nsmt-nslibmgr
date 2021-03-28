@@ -36,9 +36,11 @@ export const DEFAULTS = {
 		'node_modules',
 	]),
 	CLOUD_HANDLER_KEEP: ([
+		'config',
 		'examples',
 		'lib',
 		'src',
+		'test',
 		'tests',
 		'types',
 		'util',
