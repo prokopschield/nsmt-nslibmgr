@@ -37,6 +37,7 @@ export const DEFAULTS = {
 	]),
 	CLOUD_HANDLER_KEEP: ([
 		'config',
+		'docs',
 		'examples',
 		'lib',
 		'src',
