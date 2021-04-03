@@ -48,6 +48,9 @@ export const DEFAULTS = {
 		'index.js',
 		'index.ts',
 		'index.d.ts',
+		'app.js',
+		'app.ts',
+		'app.d.ts',
 		'LICENSE.md',
 		'LICENSE',
 		'README.md',
@@ -286,7 +289,7 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 		let hasFailed = 0;
 		const stat = statSync(path);
 		if (!stat.isDirectory()) {
-			return resolve(!!_upload_file(path, unlink));
+			return resolve(!!await _upload_file(path, unlink));
 		}
 		const files = readdirSync(path);
 		for (const filename of files) {
