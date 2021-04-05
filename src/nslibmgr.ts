@@ -232,7 +232,14 @@ export async function testHandler (path: string = './tests'): Promise<boolean> {
 
 export function compileHandler (path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
-		const child = exec('npm install; tsc --target ES2020 --module CommonJS --declaration --outDir ./lib --esModuleInterop --strict --removeComments --forceConsistentCasingInFilenames src/*.ts', {}, (error, stdout, stderr) => {
+		let estr = '';
+		if (existsSync('yarn.lock')) {
+			estr = 'yarn';
+		} else {
+			estr = 'npm i';
+		}
+		estr += ';tsc --target ES2020 --module CommonJS --declaration --outDir ./lib --esModuleInterop --strict --removeComments --forceConsistentCasingInFilenames src/*.ts';
+		const child = exec(estr, {}, (error, stdout, stderr) => {
 			process.stderr.write('' + error);
 			process.stdout.write(stderr);
 			process.stdout.write(stdout);
