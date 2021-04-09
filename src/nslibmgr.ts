@@ -128,39 +128,50 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		}
 		const packjsonpath = resolvePath(path, 'package.json');
 		let defaults: {
-			[key: string]: string;
+			[key: string]: string | {
+				[key: string]: string;
+			}
 		} = {};
 		if (existsSync(packjsonpath)) {
 			defaults = JSON.parse(readFileSync(packjsonpath, 'utf-8'));
 		}
-		const name = (await ask(`Package name? (${defaults["name"] || ""})`)) || defaults['name'] || '';
-		if (!name) return reject('Please specify a package.')
-		if (typeof name !== 'string') return reject([name, 'is not a string?']);
+
+		const name = defaults.name || await ask('Enter package name');
+
 		const pacjson: {
 			[key: string]: string | {
 				[key: string]: string;
 			}
 		} = ({
+			...{
+				name,
+				description: defaults.description || await ask('Please enter a description'),
+				version: defaults.version || "0.0.0",
+				main: defaults.main || 'lib/index.js',
+				bin: defaults.bin || {
+					[name.toString()]: 'lib/cli.js',
+				},
+				scripts: (
+					(typeof defaults.scripts === 'object')
+					? {
+						start: 'node lib/cli',
+						...defaults.scripts,
+					} : {
+						start: 'node lib/cli',
+						test: 'npx nslibmgr test',
+					}
+				),
+				author: defaults.author || await ask("Author's name?"),
+				license: defaults.license || await ask('License?'),
+			},
 			...defaults,
-			name,
-			"description": await ask(`Description (${defaults['description'] || ''})`),
-			"version": defaults?.version || "0.0.0",
-			"main": "lib/index",
-			"bin": {
-				[name]: 'lib/cli.js',
-			},
-			"scripts": {
-			  "test": "npx nslibmgr test",
-			  "start": "node lib/cli",
-			},
-			"author": await ask(`Author (${defaults['author'] || ''})`),
-			"license": await ask(`License (${defaults['license'] || ''})`),
-			"dependencies": {
-			},
-			"devDependencies": {
-				"@types/node": ">=14.14.35"
-			},
 		});
+
+		pacjson.dependencies = (typeof pacjson.dependencies === 'object') ? { ...pacjson.dependencies } : {};
+
+		pacjson.devDependencies = (typeof pacjson.devDependencies === 'object') ? { ...pacjson.devDependencies } : {};
+		if (!pacjson.devDependencies['@types/node']) pacjson.devDependencies['@types/node'] = `>=${process.version.substr(1)}`;
+
 		for (const key of Object.keys(pacjson)) {
 			if (!pacjson[key]) {
 				defaults[key] ? (pacjson[key] = defaults[key]) : delete pacjson[key];
