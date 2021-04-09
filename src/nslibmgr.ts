@@ -342,7 +342,7 @@ export async function cloudHandler (path: string = '.', {
 			_ignore = false;
 			_unlink = true;
 		}
-		if (!_ignore) success = (!!await _upload_dir(resolvePath(path, filename), _unlink).catch(() => {})) && success;
+		if (!_ignore) success = (!!await _upload_dir(resolvePath(path, filename), _unlink).catch(() => false)) && success;
 	}
 	return success;
 }
