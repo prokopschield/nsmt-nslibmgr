@@ -244,7 +244,7 @@ export async function testHandler (path: string = './tests'): Promise<boolean> {
 export function compileHandler (path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
 		let estr = '';
-		if (existsSync('yarn.lock')) {
+		if (existsSync('yarn.lock') || !existsSync('package-lock.json')) {
 			estr = 'yarn';
 		} else {
 			estr = 'npm i';
