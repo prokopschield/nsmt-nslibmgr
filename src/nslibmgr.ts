@@ -8,6 +8,9 @@ import {
 	statSync,
 	unlink as unlinkFile,
 	rmdir as unlinkDir,
+	lstatSync,
+	readlinkSync,
+	unlinkSync,
 } from 'fs';
 import https from 'https';
 import {
@@ -281,6 +284,15 @@ export async function declarationHandler (path: string = '.'): Promise<boolean> 
 	});
 }
 
+let warnedAboutSymlinkSupport = false;
+function warnSymlinkSupport() {
+	if (!warnedAboutSymlinkSupport) {
+		warnedAboutSymlinkSupport = true;
+		console.log(`nslibmgr does not support symbolic links`);
+		console.log(`Undesired behavior may happen!`);
+	}
+}
+
 export function _upload_file (path: string, unlink: boolean = false): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const stat = statSync(path);
@@ -313,8 +325,37 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 		const files = readdirSync(path);
 		for (const filename of files) {
 			const file = resolvePath(path, filename);
-			const stat = statSync(file);
-			if (stat.isDirectory()) {
+			const stat = lstatSync(file);
+			if (stat.isSymbolicLink()) {
+				console.log(`Encountered symbolic link: ${file}`);
+				warnSymlinkSupport();
+				const linked = resolvePath(path, readlinkSync(file));
+				if (existsSync(linked)) {
+					const stat = statSync(file);
+					if (stat.isDirectory()) {
+						if (linked.includes(path)) {
+							++hasFailed;
+							console.log(`Symlink ${file}->${linked} is recursive, skipping...`);
+						} else if (await _upload_dir(file, false)) {
+							console.log(`Directory ${file}->${linked} processed successfully.`);
+							if (unlink) {
+								unlinkSync(file);
+							}
+						} else {
+							console.log(`Directory ${file}->${linked} processing failed!`);
+						}
+					} else if (await _upload_file(file, unlink)) {
+						console.log(`File ${file}->${linked} processed successfully.`);
+					} else {
+						console.log(`Symlink ${file}->${linked} processing failed!`);
+						++hasFailed;
+					}
+				} else {
+					console.log(`${linked} does not exist.`);
+					console.log(`Removing invalid symlink ${file}`);
+					unlinkSync(file);
+				}
+			} else if (stat.isDirectory()) {
 				hasFailed += +!await _upload_dir(file, unlink)
 					.catch(_error => false);
 			} else {
