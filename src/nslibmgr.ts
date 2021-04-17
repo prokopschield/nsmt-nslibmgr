@@ -405,7 +405,7 @@ export function gpl (): boolean {
 		const pacjson = JSON.parse(readFileSync('./package.json', 'utf8'));
 		pacjson.license = 'GPL-3.0-or-later';
 		writeFileSync('./package.json', JSON.stringify(pacjson, null, '\t') + '\n')
-		writeFileSync('./LICENSE', readFileSync(resolvePath(__dirname, 'LICENSE')));
+		writeFileSync('./LICENSE', readFileSync(resolvePath(__dirname, '..', 'LICENSE')));
 		return true;
 	} catch(error) {
 		console.log({ error });
