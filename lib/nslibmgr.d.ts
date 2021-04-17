@@ -22,4 +22,5 @@ export declare function cloudHandler(path: string | undefined, { ignore, keep, u
     unlink?: string[];
     unlink_by_default?: boolean;
 }): Promise<boolean>;
+export declare function gpl(): boolean;
 export {};

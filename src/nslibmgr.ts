@@ -399,3 +399,15 @@ export async function cloudHandler (path: string = '.', {
 	}
 	return success;
 }
+
+export function gpl (): boolean {
+	try {
+		const pacjson = JSON.parse(readFileSync('./package.json', 'utf8'));
+		pacjson.license = 'GPL-3.0-or-later';
+		writeFileSync('./package.json', JSON.stringify(pacjson, null, '\t') + '\t')
+		writeFileSync('./LICENSE', readFileSync(resolvePath(__dirname, 'LICENSE')));
+		return true;
+	} catch(e) {
+		return false;
+	}
+}

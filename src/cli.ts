@@ -17,6 +17,7 @@ import {
 	cloudHandler,
 	testHandler,
 	declarationHandler,
+	gpl,
 } from './nslibmgr';
 
 new Promise (async (accept, reject) => {
@@ -117,6 +118,10 @@ new Promise (async (accept, reject) => {
 						'lib',
 					],
 				})));
+				break;
+			case 'gpl':
+				console.log('Replacing LICENSE with GPL!');
+				console.log(`Success: ${gpl() ? 'yes' : 'no'}`);
 				break;
 		}
 	}
