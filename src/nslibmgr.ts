@@ -174,7 +174,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		pacjson.dependencies = (typeof pacjson.dependencies === 'object') ? { ...pacjson.dependencies } : {};
 
 		pacjson.devDependencies = (typeof pacjson.devDependencies === 'object') ? { ...pacjson.devDependencies } : {};
-		if (!pacjson.devDependencies['@types/node']) pacjson.devDependencies['@types/node'] = `>=${process.version.substr(1)}`;
+		if (!pacjson.devDependencies['@types/node']) pacjson.devDependencies['@types/node'] = `>=${process.version.substr(1, 2)}`;
 
 		for (const key of Object.keys(pacjson)) {
 			if (!pacjson[key]) {
