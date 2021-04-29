@@ -119,6 +119,34 @@ new Promise (async (accept, reject) => {
 					],
 				})));
 				break;
+			case 'dev':
+			case 'd':
+			case 'go':
+			case 'g':
+			case 'all':
+			case 'a':
+			case 'full':
+			case 'f':
+				console.log('Cleaning...');
+				console.log(RESULT(await cloudHandler('.', {
+					unlink_by_default: true,
+					unlink: [
+						'package-lock.json',
+						'yarn.lock',
+						'lib',
+					],
+				})));
+				console.log('Compiling!');
+				console.log(RESULT(await compileHandler()));
+				console.log('Running!');
+				await new Promise((resolve) => {
+					const child = exec('node lib/index', (error, stdout, stderr) => resolve({ error, stdout, stderr }));
+					if (child.stdin && child.stdout && child.stderr) {
+						process.stdin.pipe(child.stdin);
+						child.stdout.pipe(process.stdout);
+						child.stderr.pipe(process.stdout);
+					}
+				}).then(console.log);
 			case 'gpl':
 				console.log('Replacing LICENSE with GPL!');
 				console.log(`Success: ${gpl() ? 'yes' : 'no'}`);
