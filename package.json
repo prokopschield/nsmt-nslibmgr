@@ -11,7 +11,7 @@
 		"start": "node lib/cli"
 	},
 	"author": "Prokop Schield",
-	"license": "GPL-3.0-or-later",
+	"license": "SEE LICENSE IN LICENSE.md",
 	"peerDependencies": {
 		"yarn": "*"
 	},
