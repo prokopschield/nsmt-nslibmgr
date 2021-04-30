@@ -34,8 +34,6 @@ export const DEFAULTS = {
 		'..',
 		'.env',
 		'.git',
-		'package-lock.json',
-		'yarn.lock',
 		'node_modules',
 	]),
 	CLOUD_HANDLER_KEEP: ([
@@ -65,7 +63,6 @@ export const DEFAULTS = {
 		'CODE_OF_CONDUCT.md',
 		'DESIGN_GUIDELINES.md',
 		'.gitignore',
-		'.npmignore',
 		'.eslintignore',
 		'.prettierignore',
 		'.prettierrc.js',
@@ -74,6 +71,7 @@ export const DEFAULTS = {
 		'.whitesource',
 		'.vscode',
 		'.github',
+		'yarn.lock',
 	]),
 	CLOUD_HANDLER_UNLINK: ([
 	]),
@@ -124,11 +122,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		}
 		let gitignore = resolvePath(path, '.gitignore');
 		if (!existsSync(gitignore)) {
-			writeFileSync(gitignore, 'package-lock.json\nyarn.lock\nnode_modules\n');
-		}
-		let npmignore = resolvePath(path, '.npmignore');
-		if (!existsSync(npmignore)) {
-			writeFileSync(npmignore, 'package-lock.json\nyarn.lock\nnode_modules\n.gitignore\n.npmignore\n');
+			writeFileSync(gitignore, 'package-lock.json\nnode_modules\n');
 		}
 		const packjsonpath = resolvePath(path, 'package.json');
 		let defaults: {
@@ -192,6 +186,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 
 const publish_options = [
 	'npm',
+	'yarn',
 ];
 
 export function publishHandler (path: string = '.'): Promise<boolean> {
@@ -208,9 +203,20 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 		console.log('Type "publish" to publish.');
 		if ((await readline()) === 'publish') {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
-			switch(await readline() || 'npm') {
+			switch(await readline() || 'yarn') {
 				case 'npm': {
 					const child = exec('npm publish', {}, (error, stdout, stderr) => resolve(!(stdout || stderr)));
+					if (process.stdin && child.stdin) {
+						process.stdin.pipe(child.stdin);
+					}
+					if (child.stdout && child.stderr && process.stdout) {
+						child.stdout.pipe(process.stdout);
+						child.stderr.pipe(process.stdout);
+					}
+					return;
+				}
+				case 'yarn': {
+					const child = exec('yarn publish', {}, (error, stdout, stderr) => resolve(!(stdout || stderr)));
 					if (process.stdin && child.stdin) {
 						process.stdin.pipe(child.stdin);
 					}
