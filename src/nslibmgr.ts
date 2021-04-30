@@ -18,9 +18,7 @@ import {
 	resolve as resolvePath,
 	relative as relativePath,
 } from 'path';
-import {
-	exec,
-} from 'child_process';
+import run from './run';
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -176,9 +174,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 			}
 		}
 		writeFileSync(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
-		await new Promise(resolve => {
-			exec('npm init -y', resolve);
-		});
+		await run('npm init -y');
 		writeFileSync(packjsonpath, JSON.stringify(JSON.parse(readFileSync(packjsonpath, 'utf-8')), null, '\t') + '\n');
 		return resolve(true);
 	});
@@ -205,26 +201,10 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
 			switch(await readline() || 'yarn') {
 				case 'npm': {
-					const child = exec('npm publish', {}, (error, stdout, stderr) => resolve(!(stdout || stderr)));
-					if (process.stdin && child.stdin) {
-						process.stdin.pipe(child.stdin);
-					}
-					if (child.stdout && child.stderr && process.stdout) {
-						child.stdout.pipe(process.stdout);
-						child.stderr.pipe(process.stdout);
-					}
-					return;
+					return run('npm publish').then(resolve);
 				}
 				case 'yarn': {
-					const child = exec('yarn publish', {}, (error, stdout, stderr) => resolve(!(stdout || stderr)));
-					if (process.stdin && child.stdin) {
-						process.stdin.pipe(child.stdin);
-					}
-					if (child.stdout && child.stderr && process.stdout) {
-						child.stdout.pipe(process.stdout);
-						child.stderr.pipe(process.stdout);
-					}
-					return;
+					return run('yarn publish').then(resolve);
 				}
 			}
 		}
@@ -260,16 +240,7 @@ export function compileHandler (path: string = '.'): Promise<boolean> {
 			estr = 'npm i';
 		}
 		estr += ' && tsc --target ES2019 --module CommonJS --declaration --outDir ./lib --esModuleInterop --strict --removeComments --forceConsistentCasingInFilenames src/*.ts';
-		const child = exec(estr, {}, (error, stdout, stderr) => {
-			process.stderr.write('' + error);
-			process.stdout.write(stderr);
-			process.stdout.write(stdout);
-			resolve(!(stderr || error));
-		});
-		if (child.stdout && child.stderr) {
-			child.stdout.pipe(process.stdout);
-			child.stderr.pipe(process.stdout);
-		}
+		return run(estr).then(resolve);
 	});
 }
 
@@ -279,13 +250,7 @@ export async function declarationHandler (path: string = '.'): Promise<boolean> 
 		const pacjson = JSON.parse(readFileSync(pacjsonpath, 'utf-8'));
 		const { main } = pacjson;
 		const entry = relativePath(path, main);
-		const child = exec(`tsc --target ES2020 --module CommonJS --declaration --AllowJS --outDir ./types --esModuleInterop --strict --forceConsistentCasingInFilenames */**/*.js */**/*ts`, (error, stdout, stderr) => {
-			resolve(!(stderr || error));
-		});
-		if (child.stdout && child.stderr) {
-			child.stdout.pipe(process.stdout);
-			child.stderr.pipe(process.stdout);
-		}
+		run(`tsc --target ES2020 --module CommonJS --declaration --AllowJS --outDir ./types --esModuleInterop --strict --forceConsistentCasingInFilenames */**/*.js */**/*ts`).then(resolve);
 		pacjson.types = `types/${basename(entry).split('.').slice(0, -1).join('.')}.d.ts`;
 		writeFileSync(pacjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 	});
