@@ -1,7 +1,7 @@
 {
 	"name": "nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.0.21",
+	"version": "0.0.22",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
@@ -16,7 +16,7 @@
 		"yarn": "*"
 	},
 	"devDependencies": {
-		"@types/node": ">=14.14.35"
+		"@types/node": ">=14"
 	},
 	"directories": {
 		"lib": "lib",

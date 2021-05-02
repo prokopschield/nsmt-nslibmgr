@@ -1,4 +1,4 @@
-import {
+import fs, {
 	existsSync,
 	mkdirSync,
 	readFileSync,
@@ -110,18 +110,27 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		if (!existsSync(src)) {
 			mkdirSync(src);
 		}
-		let index = resolvePath(src, 'index.ts');
+		const dir = await fs.promises.readdir(src);
+		let index = resolvePath(src, dir.filter(a => a && a !== 'cli.ts').shift() || 'index.ts');
 		if (!existsSync(index)) {
 			writeFileSync(index, '// This should be the entry point to your module');
 		}
 		let cli = resolvePath(src, 'cli.ts');
 		if (!existsSync(cli)) {
-			writeFileSync(cli, "#!/usr/bin/env node\n\nrequire('.')\n// This file should be the entry point for command-line execution.");
+			writeFileSync(cli, "#!/usr/bin/env node\n\nrequire('.');\n// This file should be the entry point for command-line execution.");
 		}
 		let gitignore = resolvePath(path, '.gitignore');
-		if (!existsSync(gitignore)) {
-			writeFileSync(gitignore, 'package-lock.json\nnode_modules\n');
-		}
+		const ignored = [
+			...(
+				fs.existsSync(gitignore)
+				? ( await fs.promises.readFile(gitignore, 'utf8') ).split(/[\r\n]+/g)
+				: [
+					'node_modules/',
+				]
+			).filter((a: string) => a),
+			'',
+		];
+		await fs.promises.writeFile(gitignore, ignored.join('\n'));
 		const packjsonpath = resolvePath(path, 'package.json');
 		let defaults: {
 			[key: string]: string | {
