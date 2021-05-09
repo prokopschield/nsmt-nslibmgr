@@ -189,6 +189,29 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 	});
 }
 
+async function gitignore_set (dirname: string, shouldExist?: boolean, isDirectory?: boolean): Promise<boolean> {
+	try {
+		if (fs.existsSync('.gitignore')) {
+			fs.writeFileSync('.gitignore', (
+				(fs.readFileSync('.gitignore', 'utf8') + '\n')
+				.split(/[\r\n]+/g)
+				.filter(a => a !== dirname)
+				.filter(a => a !== `${dirname}/`)
+				.join('\n')
+				.replace(/[\n]+/, '\n')
+				+ (
+					shouldExist ? (
+						`${dirname}${isDirectory ? '/' : ''}\n`
+					) : ''
+				)
+			));
+		}
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
 const publish_options = [
 	'npm',
 	'yarn',
@@ -203,17 +226,27 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 		let [ maj, min, pat ] = [ ...ver, 0, 0, 0 ];
 		++pat;
 		pacjson.version = `${+maj || 0}.${+min || 0}.${+pat || 0}`;
-		writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
+		if (!fs.existsSync(resolvePath('.', (
+			pacjson.main.includes('.js')
+			? pacjson.main
+			: `${pacjson.main}.js`
+		)))) {
+			console.log(`ERROR: ${pacjson.main} does not exist!`);
+			console.log(`Refusing to publish.`);
+			return reject(false);
+		}
 		console.log(`Publish ${pacjson.name} version ${pacjson.version}?`);
 		console.log('Type "publish" to publish.');
 		if ((await readline()) === 'publish') {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
+			writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
+			gitignore_set('lib', false);
 			switch(await readline() || 'yarn') {
 				case 'npm': {
-					return run('npm publish').then(resolve);
+					return run('npm publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
 				}
 				case 'yarn': {
-					return run('yarn publish').then(resolve);
+					return run('yarn publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
 				}
 			}
 		}
