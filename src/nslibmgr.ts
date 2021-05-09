@@ -18,7 +18,10 @@ import {
 	resolve as resolvePath,
 	relative as relativePath,
 } from 'path';
+import { ask, readline } from './ask';
 import run from './run';
+import selector from './selector';
+import semver from './semver';
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -74,35 +77,6 @@ export const DEFAULTS = {
 	CLOUD_HANDLER_UNLINK: ([
 	]),
 }
-
-const readlinequeue: Array<(line: string) => void> = [];
-let readlinebuffer = '';
-function readline (): Promise<string> {
-	return new Promise(accept => {
-		readlinequeue.push(accept);
-		readlinebuffer = '';
-		process.stdout.write('\r\n> ');
-	});
-}
-function ask (question: string): Promise<string> {
-	console.log(question);
-	return readline();
-}
-process.stdin.on('data', chunk => {
-	for (const byte of chunk) {
-		if (byte < 0x20) {
-			if (byte == 0xa) {
-				if (readlinequeue.length) {
-					console.log('\n');
-					readlinequeue.shift()?.(readlinebuffer);
-				}
-				readlinebuffer = '';
-			}
-		} else {
-			readlinebuffer += String.fromCharCode(byte);
-		}
-	}
-});
 
 export async function creativeHandler (path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
@@ -221,11 +195,16 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		const file = resolvePath(path, 'package.json');
 		const pacjson = require(file);
-		if (!pacjson.version) pacjson.version = '0.0.-1';
-		let ver = pacjson.version.split('.');
-		let [ maj, min, pat ] = [ ...ver, 0, 0, 0 ];
-		++pat;
-		pacjson.version = `${+maj || 0}.${+min || 0}.${+pat || 0}`;
+		if (!pacjson.version) pacjson.version = '0.0.0-0';
+		const ov = pacjson.version;
+		pacjson.version = semver(pacjson.version, await selector('Release type?', {
+			pp: 'pre-release (x.x.x-X)',
+			p: 'patch (x.x.X)',
+			pm: 'pre-minor (x.x.0-X)',
+			m: 'minor (x.X.0)',
+			pM: 'pre-major (x.0.0-X)',
+			M: 'major (X.0.0)'
+		}));
 		if (!fs.existsSync(resolvePath('.', (
 			pacjson.main.includes('.js')
 			? pacjson.main
@@ -250,8 +229,7 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 				}
 			}
 		}
-		--pat;
-		pacjson.version = `${+maj || 0}.${+min || 0}.${+pat || 0}`;
+		pacjson.version = ov;
 		writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);
