@@ -19,6 +19,7 @@ import {
 	relative as relativePath,
 } from 'path';
 import { ask, readline } from './ask';
+import gitignore from './gitignore';
 import run from './run';
 import selector from './selector';
 import semver from './semver';
@@ -165,21 +166,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 
 async function gitignore_set (dirname: string, shouldExist?: boolean, isDirectory?: boolean): Promise<boolean> {
 	try {
-		if (fs.existsSync('.gitignore')) {
-			fs.writeFileSync('.gitignore', (
-				(fs.readFileSync('.gitignore', 'utf8') + '\n')
-				.split(/[\r\n]+/g)
-				.filter(a => a !== dirname)
-				.filter(a => a !== `${dirname}/`)
-				.join('\n')
-				.replace(/[\n]+/, '\n')
-				+ (
-					shouldExist ? (
-						`${dirname}${isDirectory ? '/' : ''}\n`
-					) : ''
-				)
-			));
-		}
+		shouldExist ? gitignore.add(isDirectory ? `${dirname}/` : dirname) : gitignore.remove(dirname);
 		return true;
 	} catch (error) {
 		return false;
@@ -220,6 +207,7 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
 			writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
 			gitignore_set('lib', false);
+			gitignore_set('node_modules', true, true);
 			switch(await readline() || 'yarn') {
 				case 'npm': {
 					return run('npm publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
@@ -231,6 +219,7 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 		}
 		pacjson.version = ov;
 		writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
+		gitignore_set('lib', true, true);
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);
 	});
