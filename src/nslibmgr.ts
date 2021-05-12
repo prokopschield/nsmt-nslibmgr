@@ -1,4 +1,5 @@
-import fs, {
+import { read, write, fs } from 'doge-json';
+import {
 	existsSync,
 	mkdirSync,
 	readFileSync,
@@ -55,6 +56,7 @@ export const DEFAULTS = {
 		'app.js',
 		'app.ts',
 		'app.d.ts',
+		'gpl-3.0.md',
 		'LICENSE.md',
 		'LICENSE',
 		'README.md',
@@ -382,13 +384,13 @@ export async function cloudHandler (path: string = '.', {
 
 export function gpl (): boolean {
 	try {
-		const pacjson = JSON.parse(readFileSync('./package.json', 'utf8'));
+		fs.writeFileSync('./LICENSE.md', fs.readFileSync(resolvePath(__dirname, '..', 'gpl-3.0.md')));
+		if (fs.existsSync('./LICENSE')) fs.unlinkSync('./LICENSE');
+		const pacjson = read('./package.json');
 		pacjson.license = 'GPL-3.0-or-later';
-		writeFileSync('./package.json', JSON.stringify(pacjson, null, '\t') + '\n')
-		writeFileSync('./LICENSE', readFileSync(resolvePath(__dirname, '..', 'LICENSE')));
+		write('./package.json', pacjson);
 		return true;
-	} catch(error) {
-		console.log({ error });
+	} catch (error) {
 		return false;
 	}
 }

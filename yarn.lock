@@ -19,6 +19,11 @@
   dependencies:
     "@types/node" "*"
 
+doge-json@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.0.3.tgz#3748ea8c9c8c46e5b942206ad7afe5c8fd55b6bb"
+  integrity sha512-EIzgSpaLvwTsNnw9TG35rlKng2TH4sxP52yCGSdFSX0qavR32r8kaiPV5b40GXdUQZCYke705uqXmOKFgiM2ow==
+
 kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
