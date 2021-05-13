@@ -96,18 +96,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		if (!existsSync(cli)) {
 			writeFileSync(cli, "#!/usr/bin/env node\n\nrequire('.');\n// This file should be the entry point for command-line execution.");
 		}
-		let gitignore = resolvePath(path, '.gitignore');
-		const ignored = [
-			...(
-				fs.existsSync(gitignore)
-				? ( await fs.promises.readFile(gitignore, 'utf8') ).split(/[\r\n]+/g)
-				: [
-					'node_modules/',
-				]
-			).filter((a: string) => a),
-			'',
-		];
-		await fs.promises.writeFile(gitignore, ignored.join('\n'));
+		gitignore.add('node_modules/');
 		const packjsonpath = resolvePath(path, 'package.json');
 		let defaults: {
 			[key: string]: string | {
