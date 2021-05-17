@@ -24,6 +24,7 @@ import gitignore from './gitignore';
 import run from './run';
 import selector from './selector';
 import semver from './semver';
+import tsconfig from './tsconfig';
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -75,6 +76,7 @@ export const DEFAULTS = {
 		'.whitesource',
 		'.vscode',
 		'.github',
+		'tsconfig.json',
 		'yarn.lock',
 	]),
 	CLOUD_HANDLER_UNLINK: ([
@@ -233,14 +235,8 @@ export async function testHandler (path: string = './tests'): Promise<boolean> {
 
 export function compileHandler (path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
-		let estr = '';
-		if (existsSync('yarn.lock') || !existsSync('package-lock.json')) {
-			estr = 'yarn';
-		} else {
-			estr = 'npm i';
-		}
-		estr += ' && tsc --target ES2019 --module CommonJS --declaration --outDir ./lib --esModuleInterop --strict --removeComments --forceConsistentCasingInFilenames src/*.ts';
-		return run(estr).then(resolve);
+		tsconfig.write();
+		return run('yarn').then((suc: boolean) => suc && run('tsc')).then(resolve);
 	});
 }
 
