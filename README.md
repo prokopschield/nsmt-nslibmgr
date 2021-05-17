@@ -38,8 +38,6 @@ Arguments
 
 `test` \- run test scripts
 
-`declare` \- generate TypeScript declarations from JSDoc
-
 `publish` \- publish to npm
 
 ### Folder structure
@@ -47,8 +45,6 @@ Arguments
 `src/` \- source files
 
 `lib/` \- compiled files - do not edit, run `nslibmgr make`
-
-`types/` \- TypeScript declarations - do not edit, run `nslibmgr declare`
 
 `tests/` \- test scripts, each file should export an async function
 

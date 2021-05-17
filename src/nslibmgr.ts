@@ -240,18 +240,6 @@ export function compileHandler (path: string = '.'): Promise<boolean> {
 	});
 }
 
-export async function declarationHandler (path: string = '.'): Promise<boolean> {
-	return new Promise((resolve, _reject) => {
-		const pacjsonpath = resolvePath(path, 'package.json');
-		const pacjson = JSON.parse(readFileSync(pacjsonpath, 'utf-8'));
-		const { main } = pacjson;
-		const entry = relativePath(path, main);
-		run(`tsc --target ES2020 --module CommonJS --declaration --AllowJS --outDir ./types --esModuleInterop --strict --forceConsistentCasingInFilenames */**/*.js */**/*ts`).then(resolve);
-		pacjson.types = `types/${basename(entry).split('.').slice(0, -1).join('.')}.d.ts`;
-		writeFileSync(pacjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
-	});
-}
-
 let warnedAboutSymlinkSupport = false;
 function warnSymlinkSupport() {
 	if (!warnedAboutSymlinkSupport) {

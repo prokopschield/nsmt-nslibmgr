@@ -16,7 +16,6 @@ import {
 	compileHandler,
 	cloudHandler,
 	testHandler,
-	declarationHandler,
 	gpl,
 } from './nslibmgr';
 
@@ -40,13 +39,6 @@ new Promise (async (accept, reject) => {
 			case 'm':
 				console.log('Compiling!');
 				console.log(RESULT(await compileHandler()));
-				break;
-			case 'declare':
-			case 'declaration':
-			case 'declarations':
-			case 'd':
-				console.log('Generating TypeScript declarations!');
-				console.log(RESULT(await declarationHandler()));
 				break;
 			case 'install':
 				console.log('Installing!');
@@ -147,6 +139,7 @@ new Promise (async (accept, reject) => {
 						child.stderr.pipe(process.stdout);
 					}
 				}).then(console.log);
+				break;
 			case 'gpl':
 				console.log('Replacing LICENSE with GPL!');
 				console.log(`Success: ${gpl() ? 'yes' : 'no'}`);
