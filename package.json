@@ -1,7 +1,7 @@
 {
 	"name": "nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
@@ -16,8 +16,7 @@
 		"yarn": "*"
 	},
 	"dependencies": {
-		"doge-config": "^0.2.4",
-		"doge-json": "^1.0.3",
+		"doge-config": "^0.3.0-3",
 		"prompts": "^2.4.1"
 	},
 	"devDependencies": {

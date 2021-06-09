@@ -19,17 +19,17 @@
   dependencies:
     "@types/node" "*"
 
-doge-config@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.2.4.tgz#c1864ba19d51604d7d1a09f944e8d2f8967c6489"
-  integrity sha512-qMbXXsrYxFBc+8HAzAaXNzWKjQXL+RLjd8BoC8+2VmL7shNFvH5tYnKZUzDjlpdLEFh8EV43eUWWS2nkAMAIBA==
+doge-config@^0.3.0-3:
+  version "0.3.0-3"
+  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.0-3.tgz#1ddd0916bbe2d94e04865dd83a61118fd1360ade"
+  integrity sha512-CxHA26bLknaf05IiMoYmO7xaH4aMN42whIdnAtsADsaBPGbgSHzFVL0RaZ+HF+eRPkGZzc+p3NcjjoylNAzJlw==
   dependencies:
-    doge-json "^1.0.2"
+    doge-json "^1.0.4"
 
-doge-json@^1.0.2, doge-json@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.0.3.tgz#3748ea8c9c8c46e5b942206ad7afe5c8fd55b6bb"
-  integrity sha512-EIzgSpaLvwTsNnw9TG35rlKng2TH4sxP52yCGSdFSX0qavR32r8kaiPV5b40GXdUQZCYke705uqXmOKFgiM2ow==
+doge-json@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.0.4.tgz#2f4196ac7f9d79b582fb1e747c3d78bc5abcf794"
+  integrity sha512-4E/33E0ylyCsGyM5LDEkBTxtq7sI5hV/hgMZl9naqtu8iV+Sow/t2j1CrUqdEWSieLxHtOJ7HfgbLPuDo37k7A==
 
 kleur@^3.0.3:
   version "3.0.3"
