@@ -14,17 +14,20 @@ import {
 	unlinkSync,
 } from 'fs';
 import https from 'https';
+import OpList from 'oplist';
 import {
 	basename,
 	resolve as resolvePath,
 	relative as relativePath,
 } from 'path';
 import { ask, readline } from './ask';
-import gitignore from './gitignore';
 import run from './run';
 import selector from './selector';
 import semver from './semver';
 import tsconfig from './tsconfig';
+
+const gitignore = new OpList('.gitignore');
+const npmignore = new OpList('.npmignore');
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -159,7 +162,7 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 
 async function gitignore_set (dirname: string, shouldExist?: boolean, isDirectory?: boolean): Promise<boolean> {
 	try {
-		shouldExist ? gitignore.add(isDirectory ? `${dirname}/` : dirname) : gitignore.remove(dirname);
+		shouldExist ? gitignore.add(isDirectory ? `${dirname}/` : dirname) : gitignore.remove(dirname, `${dirname}/`);
 		return true;
 	} catch (error) {
 		return false;
@@ -201,6 +204,8 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 			writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
 			gitignore_set('lib', false);
 			gitignore_set('node_modules', true, true);
+			npmignore.add(...gitignore.entries, 'src/');
+			npmignore.remove('lib');
 			switch(await readline() || 'yarn') {
 				case 'npm': {
 					return run('npm publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
