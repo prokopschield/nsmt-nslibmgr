@@ -71,6 +71,7 @@ export const DEFAULTS = {
 		'CODE_OF_CONDUCT.md',
 		'DESIGN_GUIDELINES.md',
 		'.gitignore',
+		'.npmignore',
 		'.eslintignore',
 		'.prettierignore',
 		'.prettierrc.js',
