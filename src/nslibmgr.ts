@@ -205,7 +205,7 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 			writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
 			gitignore_set('lib', false);
 			gitignore_set('node_modules', true, true);
-			npmignore.add(...gitignore.entries, 'src/');
+			npmignore.add(...gitignore.entries, 'src/', 'tsconfig.json');
 			npmignore.remove('lib');
 			switch(await readline() || 'yarn') {
 				case 'npm': {
