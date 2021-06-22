@@ -1,5 +1,5 @@
 {
-	"name": "nslibmgr",
+	"name": "nsmt-nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
 	"version": "0.2.0-3",
 	"main": "lib/index",
