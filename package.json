@@ -14,6 +14,7 @@
 	"license": "SEE LICENSE IN LICENSE.md",
 	"dependencies": {
 		"doge-config": "^0.3.0-3",
+		"nsblob": "^0.2.3",
 		"oplist": "^0.0.0-3",
 		"prompts": "^2.4.1"
 	},
