@@ -130,10 +130,10 @@ nodesite.eu@^1.2.0-9:
     socket.io-client "^3.1.0"
     ts-hound "^1.0.7"
 
-nsblob@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/nsblob/-/nsblob-0.2.3.tgz#d848159c14ad1e90818d1278cd066020ef5cc05e"
-  integrity sha512-VyQMRC/aUhUSb2R75qe3PXqg93n2wwWnKYcIJZie3GUBpyKf50SeSdfkG734kQodsUnXSXxDK6cxN1qrAND5dA==
+nsblob@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/nsblob/-/nsblob-0.2.4.tgz#bb0d3ac4515c544df60fd0f3e1dfadf8fd0d8954"
+  integrity sha512-D9o0dNRW+CN4kY9HP9xY0tptWEEQYGseDetDbcibfH9Ft6GUS6Iup4lDnONrIBQX4fNSF3VJqZKWsdsNiZmhAg==
   dependencies:
     nodesite.eu "^1.2.0-9"
 

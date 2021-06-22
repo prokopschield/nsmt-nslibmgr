@@ -1,3 +1,4 @@
+import { getConfig } from 'doge-config';
 import { read, write, fs } from 'doge-json';
 import {
 	existsSync,
@@ -14,6 +15,7 @@ import {
 	unlinkSync,
 } from 'fs';
 import https from 'https';
+import nsblob from 'nsblob';
 import OpList from 'oplist';
 import {
 	basename,
@@ -255,24 +257,12 @@ function warnSymlinkSupport() {
 	}
 }
 
-export function _upload_file (path: string, unlink: boolean = false): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const stat = statSync(path);
-		if (stat.size > 2 ** 20) return reject(ERROR.SIZE_LIMIT_EXCEEDED);
-		const req = https.request('https://nslibmgr.nodesite.eu/static/upload', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'Application/Octet-Stream',
-				'Content-Length': stat.size,
-				'X-Client': 'nslibmgr',
-			}
-		}, (res => {
-			let b = '';
-			res.on('data', data => b += data);
-			res.on('end', () => (b.length === 64) ? ( unlink ? unlinkFile(path, () => resolve(b)) : resolve(b) ) : reject(ERROR.SIZE_LIMIT_EXCEEDED));
-		}));
-		createReadStream(path).pipe(req);
-	});
+const nsblob_config = getConfig('nsblob');
+const file_too_large = nsblob.store(nsblob_config.str.file_too_large);
+
+export async function _upload_file (path: string, unlink: boolean = false): Promise<string | false> {
+	const up = await nsblob.store_file(path);
+	return (up !== await file_too_large) && up;
 }
 
 type success = boolean;
