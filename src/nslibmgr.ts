@@ -262,7 +262,7 @@ const file_too_large = nsblob.store(nsblob_config.str.file_too_large);
 
 export async function _upload_file (path: string, unlink: boolean = false): Promise<string | false> {
 	const up = await nsblob.store_file(path);
-	return (up !== await file_too_large) && up;
+	return (up === await file_too_large) ? up : (unlink && (await fs.promises.unlink(path)) || false);
 }
 
 type success = boolean;
