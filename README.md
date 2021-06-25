@@ -16,7 +16,7 @@ Tested on Node 14 LTS on GNU/Linux.
 
 ### How do I install this?
 
-npm:  `sudo npm i -g nslibmgr yarn`
+npm: `sudo npm i -g nslibmgr yarn`
 
 yarn: `sudo yarn global add nslibmgr`
 

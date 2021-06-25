@@ -4,14 +4,14 @@ import { read, write } from 'doge-json';
 const current_tsconfig = read('tsconfig.json');
 
 class TSConfig extends Config {
-	write () {
+	write() {
 		write('./tsconfig.json', {
 			...this,
 			include: this.__getArray('include'),
 			exclude: this.__getArray('exclude'),
 		});
 	}
-	constructor () {
+	constructor() {
 		super('tsconfig', {
 			compilerOptions: {
 				target: 'ES2018',
@@ -22,11 +22,8 @@ class TSConfig extends Config {
 				strict: true,
 				forceConsistentCasingInFileNames: true,
 			},
-			include: [
-				'src/**/*',
-			],
-			exclude: [
-			],
+			include: ['src/**/*'],
+			exclude: [],
 		});
 		if (typeof current_tsconfig === 'object') {
 			this.__setDefault(current_tsconfig);
@@ -34,7 +31,7 @@ class TSConfig extends Config {
 	}
 }
 
-export const tsconfig = new TSConfig;
+export const tsconfig = new TSConfig();
 
 export default tsconfig;
 module.exports = tsconfig;
