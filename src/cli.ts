@@ -17,6 +17,7 @@ import {
 	cloudHandler,
 	testHandler,
 	gpl,
+	lintHandler,
 } from './nslibmgr';
 
 new Promise(async (accept, reject) => {
@@ -160,6 +161,13 @@ new Promise(async (accept, reject) => {
 			case 'gpl':
 				console.log('Replacing LICENSE with GPL!');
 				console.log(`Success: ${gpl() ? 'yes' : 'no'}`);
+				break;
+			case 'l':
+			case 'lint':
+			case 'p':
+			case 'pretty':
+				console.log(`Prettying!`);
+				await lintHandler().then(() => console.log(`Prettied!`));
 				break;
 		}
 	}

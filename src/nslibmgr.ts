@@ -201,7 +201,7 @@ const publish_options = ['npm', 'yarn'];
 
 export function publishHandler(path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
-		await run(`npx prettier --use-tabs --single-quote --write .`);
+		await lintHandler();
 		const file = resolvePath(path, 'package.json');
 		const pacjson = require(file);
 		if (!pacjson.version) pacjson.version = '0.0.0-0';
@@ -257,6 +257,10 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);
 	});
+}
+
+export async function lintHandler() {
+	await run(`npx prettier --use-tabs --single-quote --write .`);
 }
 
 export async function testHandler(path: string = './tests'): Promise<boolean> {
