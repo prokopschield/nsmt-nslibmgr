@@ -3,11 +3,11 @@
 const SUCCESS = 'Success.';
 const FAILED = 'Failed.';
 let HAS_FAILED = false;
-function FAILURE () {
+function FAILURE() {
 	HAS_FAILED = true;
 	return FAILED;
 }
-const RESULT = (res: any) => res ? SUCCESS : FAILURE();
+const RESULT = (res: any) => (res ? SUCCESS : FAILURE());
 
 import { exec } from 'child_process';
 import {
@@ -17,9 +17,10 @@ import {
 	cloudHandler,
 	testHandler,
 	gpl,
+	lintHandler,
 } from './nslibmgr';
 
-new Promise (async (accept, reject) => {
+new Promise(async (accept, reject) => {
 	for (const arg of process.argv) {
 		if (HAS_FAILED) {
 			return reject(`Previous instructions failed, ${arg} did not run.`);
@@ -28,7 +29,12 @@ new Promise (async (accept, reject) => {
 			case 'create':
 			case 'init':
 				console.log('Creating new project!');
-				console.log(await creativeHandler().catch((...error) => [ 'Project creation failed.', ...error ]));
+				console.log(
+					await creativeHandler().catch((...error) => [
+						'Project creation failed.',
+						...error,
+					])
+				);
 				break;
 			case 'build':
 			case 'comp':
@@ -43,7 +49,9 @@ new Promise (async (accept, reject) => {
 			case 'install':
 				console.log('Installing!');
 				await new Promise((resolve) => {
-					const child = exec('npm install', (error, stdout, stderr) => resolve({error, stdout, stderr}));
+					const child = exec('npm install', (error, stdout, stderr) =>
+						resolve({ error, stdout, stderr })
+					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
 						child.stdout.pipe(process.stdout);
@@ -54,7 +62,10 @@ new Promise (async (accept, reject) => {
 			case 'update':
 				console.log('Installing!');
 				await new Promise((resolve) => {
-					const child = exec('npm install -g nslibmgr', (error, stdout, stderr) => resolve({error, stdout, stderr}));
+					const child = exec(
+						'npm install -g nslibmgr',
+						(error, stdout, stderr) => resolve({ error, stdout, stderr })
+					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
 						child.stdout.pipe(process.stdout);
@@ -66,7 +77,9 @@ new Promise (async (accept, reject) => {
 			case 'r':
 				console.log('Running!');
 				await new Promise((resolve) => {
-					const child = exec('node lib/index', (error, stdout, stderr) => resolve({error, stdout, stderr}));
+					const child = exec('node lib/index', (error, stdout, stderr) =>
+						resolve({ error, stdout, stderr })
+					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
 						child.stdout.pipe(process.stdout);
@@ -95,21 +108,24 @@ new Promise (async (accept, reject) => {
 				break;
 			case 'clean':
 				console.log('Cleaning!');
-				console.log(RESULT(await cloudHandler('.', {
-					unlink_by_default: true,
-				})));
+				console.log(
+					RESULT(
+						await cloudHandler('.', {
+							unlink_by_default: true,
+						})
+					)
+				);
 				break;
 			case 'purge':
 				console.log('Purging!');
-				console.log(RESULT(await cloudHandler('.', {
-					unlink_by_default: true,
-					unlink: [
-						'package-lock.json',
-						'yarn.lock',
-						'node_modules',
-						'lib',
-					],
-				})));
+				console.log(
+					RESULT(
+						await cloudHandler('.', {
+							unlink_by_default: true,
+							unlink: ['package-lock.json', 'yarn.lock', 'node_modules', 'lib'],
+						})
+					)
+				);
 				break;
 			case 'dev':
 			case 'd':
@@ -120,19 +136,21 @@ new Promise (async (accept, reject) => {
 			case 'full':
 			case 'f':
 				console.log('Cleaning...');
-				console.log(RESULT(await cloudHandler('.', {
-					unlink_by_default: true,
-					unlink: [
-						'package-lock.json',
-						'yarn.lock',
-						'lib',
-					],
-				})));
+				console.log(
+					RESULT(
+						await cloudHandler('.', {
+							unlink_by_default: true,
+							unlink: ['package-lock.json', 'yarn.lock', 'lib'],
+						})
+					)
+				);
 				console.log('Compiling!');
 				console.log(RESULT(await compileHandler()));
 				console.log('Running!');
 				await new Promise((resolve) => {
-					const child = exec('node lib/index', (error, stdout, stderr) => resolve({ error, stdout, stderr }));
+					const child = exec('node lib/index', (error, stdout, stderr) =>
+						resolve({ error, stdout, stderr })
+					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
 						child.stdout.pipe(process.stdout);
@@ -144,10 +162,19 @@ new Promise (async (accept, reject) => {
 				console.log('Replacing LICENSE with GPL!');
 				console.log(`Success: ${gpl() ? 'yes' : 'no'}`);
 				break;
+			case 'l':
+			case 'lint':
+			case 'p':
+			case 'pretty':
+				console.log(`Prettying!`);
+				await lintHandler().then(() => console.log(`Prettied!`));
+				break;
 		}
 	}
-	accept(new Date);
-}).then((...args: any[]) => {
-	console.log('Finished!', args);
-	process.exit(0);
-}).catch(console.log);
+	accept(new Date());
+})
+	.then((...args: any[]) => {
+		console.log('Finished!', args);
+		process.exit(0);
+	})
+	.catch(console.log);

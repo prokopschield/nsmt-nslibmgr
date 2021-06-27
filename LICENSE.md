@@ -1,4 +1,4 @@
-*** LICENSE ***
+**_ LICENSE _**
 
 1. Your project will be sent to my server. You consent to this by using this utility.
 2. Don't mess with my server, try to flood it, etc.

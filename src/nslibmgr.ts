@@ -38,14 +38,8 @@ export enum ERROR {
 }
 
 export const DEFAULTS = {
-	CLOUD_HANDLER_IGNORE: ([
-		'.',
-		'..',
-		'.env',
-		'.git',
-		'node_modules',
-	]),
-	CLOUD_HANDLER_KEEP: ([
+	CLOUD_HANDLER_IGNORE: ['.', '..', '.env', '.git', 'node_modules'],
+	CLOUD_HANDLER_KEEP: [
 		'config',
 		'docs',
 		'examples',
@@ -84,72 +78,92 @@ export const DEFAULTS = {
 		'.github',
 		'tsconfig.json',
 		'yarn.lock',
-	]),
-	CLOUD_HANDLER_UNLINK: ([
-	]),
-}
+	],
+	CLOUD_HANDLER_UNLINK: [],
+};
 
-export async function creativeHandler (path: string = '.'): Promise<boolean> {
+export async function creativeHandler(path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		let src = resolvePath(path, 'src');
 		if (!existsSync(src)) {
 			mkdirSync(src);
 		}
 		const dir = await fs.promises.readdir(src);
-		let index = resolvePath(src, dir.filter(a => a && a !== 'cli.ts').shift() || 'index.ts');
+		let index = resolvePath(
+			src,
+			dir.filter((a) => a && a !== 'cli.ts').shift() || 'index.ts'
+		);
 		if (!existsSync(index)) {
 			writeFileSync(index, '// This should be the entry point to your module');
 		}
 		let cli = resolvePath(src, 'cli.ts');
 		if (!existsSync(cli)) {
-			writeFileSync(cli, "#!/usr/bin/env node\n\nrequire('.');\n// This file should be the entry point for command-line execution.");
+			writeFileSync(
+				cli,
+				"#!/usr/bin/env node\n\nrequire('.');\n// This file should be the entry point for command-line execution."
+			);
 		}
 		gitignore.add('node_modules/');
 		const packjsonpath = resolvePath(path, 'package.json');
 		let defaults: {
-			[key: string]: string | {
-				[key: string]: string;
-			}
+			[key: string]:
+				| string
+				| {
+						[key: string]: string;
+				  };
 		} = {};
 		if (existsSync(packjsonpath)) {
 			defaults = JSON.parse(readFileSync(packjsonpath, 'utf-8'));
 		}
 
-		const name = defaults.name || await ask('Enter package name');
+		const name = defaults.name || (await ask('Enter package name'));
 
 		const pacjson: {
-			[key: string]: string | {
-				[key: string]: string;
-			}
-		} = ({
+			[key: string]:
+				| string
+				| {
+						[key: string]: string;
+				  };
+		} = {
 			...{
 				name,
-				description: defaults.description || await ask('Please enter a description'),
-				version: defaults.version || "0.0.0",
+				description:
+					defaults.description || (await ask('Please enter a description')),
+				version: defaults.version || '0.0.0',
 				main: defaults.main || 'lib/index.js',
 				bin: defaults.bin || {
 					[name.toString()]: 'lib/cli.js',
 				},
-				scripts: (
-					(typeof defaults.scripts === 'object')
-					? {
-						start: 'node lib/cli',
-						...defaults.scripts,
-					} : {
-						start: 'node lib/cli',
-						test: 'npx nslibmgr test',
-					}
-				),
-				author: defaults.author || await ask("Author's name?"),
-				license: defaults.license || await ask('License?'),
+				scripts:
+					typeof defaults.scripts === 'object'
+						? {
+								start: 'node lib/cli',
+								...defaults.scripts,
+						  }
+						: {
+								start: 'node lib/cli',
+								test: 'npx nslibmgr test',
+						  },
+				author: defaults.author || (await ask("Author's name?")),
+				license: defaults.license || (await ask('License?')),
 			},
 			...defaults,
-		});
+		};
 
-		pacjson.dependencies = (typeof pacjson.dependencies === 'object') ? { ...pacjson.dependencies } : {};
+		pacjson.dependencies =
+			typeof pacjson.dependencies === 'object'
+				? { ...pacjson.dependencies }
+				: {};
 
-		pacjson.devDependencies = (typeof pacjson.devDependencies === 'object') ? { ...pacjson.devDependencies } : {};
-		if (!pacjson.devDependencies['@types/node']) pacjson.devDependencies['@types/node'] = `>=${process.version.substr(1, 2)}`;
+		pacjson.devDependencies =
+			typeof pacjson.devDependencies === 'object'
+				? { ...pacjson.devDependencies }
+				: {};
+		if (!pacjson.devDependencies['@types/node'])
+			pacjson.devDependencies['@types/node'] = `>=${process.version.substr(
+				1,
+				2
+			)}`;
 
 		for (const key of Object.keys(pacjson)) {
 			if (!pacjson[key]) {
@@ -158,44 +172,61 @@ export async function creativeHandler (path: string = '.'): Promise<boolean> {
 		}
 		writeFileSync(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 		await run('npm init -y');
-		writeFileSync(packjsonpath, JSON.stringify(JSON.parse(readFileSync(packjsonpath, 'utf-8')), null, '\t') + '\n');
+		writeFileSync(
+			packjsonpath,
+			JSON.stringify(
+				JSON.parse(readFileSync(packjsonpath, 'utf-8')),
+				null,
+				'\t'
+			) + '\n'
+		);
 		return resolve(true);
 	});
 }
 
-async function gitignore_set (dirname: string, shouldExist?: boolean, isDirectory?: boolean): Promise<boolean> {
+async function gitignore_set(
+	dirname: string,
+	shouldExist?: boolean,
+	isDirectory?: boolean
+): Promise<boolean> {
 	try {
-		shouldExist ? gitignore.add(isDirectory ? `${dirname}/` : dirname) : gitignore.remove(dirname, `${dirname}/`);
+		shouldExist
+			? gitignore.add(isDirectory ? `${dirname}/` : dirname)
+			: gitignore.remove(dirname, `${dirname}/`);
 		return true;
 	} catch (error) {
 		return false;
 	}
 }
 
-const publish_options = [
-	'npm',
-	'yarn',
-];
+const publish_options = ['npm', 'yarn'];
 
-export function publishHandler (path: string = '.'): Promise<boolean> {
+export function publishHandler(path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
+		await lintHandler();
 		const file = resolvePath(path, 'package.json');
 		const pacjson = require(file);
 		if (!pacjson.version) pacjson.version = '0.0.0-0';
 		const ov = pacjson.version;
-		pacjson.version = semver(pacjson.version, await selector('Release type?', {
-			pp: 'pre-release (x.x.x-X)',
-			p: 'patch (x.x.X)',
-			pm: 'pre-minor (x.x.0-X)',
-			m: 'minor (x.X.0)',
-			pM: 'pre-major (x.0.0-X)',
-			M: 'major (X.0.0)'
-		}));
-		if (!fs.existsSync(resolvePath('.', (
-			pacjson.main.includes('.js')
-			? pacjson.main
-			: `${pacjson.main}.js`
-		)))) {
+		pacjson.version = semver(
+			pacjson.version,
+			await selector('Release type?', {
+				pp: 'pre-release (x.x.x-X)',
+				p: 'patch (x.x.X)',
+				pm: 'pre-minor (x.x.0-X)',
+				m: 'minor (x.X.0)',
+				pM: 'pre-major (x.0.0-X)',
+				M: 'major (X.0.0)',
+			})
+		);
+		if (
+			!fs.existsSync(
+				resolvePath(
+					'.',
+					pacjson.main.includes('.js') ? pacjson.main : `${pacjson.main}.js`
+				)
+			)
+		) {
 			console.log(`ERROR: ${pacjson.main} does not exist!`);
 			console.log(`Refusing to publish.`);
 			return reject(false);
@@ -209,12 +240,16 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 			gitignore_set('node_modules', true, true);
 			npmignore.add(...gitignore.entries, 'src/', 'tsconfig.json');
 			npmignore.remove('lib');
-			switch(await readline() || 'yarn') {
+			switch ((await readline()) || 'yarn') {
 				case 'npm': {
-					return run('npm publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
+					return run('npm publish')
+						.then((success) => gitignore_set('lib', true, true) && success)
+						.then(resolve);
 				}
 				case 'yarn': {
-					return run('yarn publish').then((success) => gitignore_set('lib', true, true) && success).then(resolve);
+					return run('yarn publish')
+						.then((success) => gitignore_set('lib', true, true) && success)
+						.then(resolve);
 				}
 			}
 		}
@@ -226,7 +261,11 @@ export function publishHandler (path: string = '.'): Promise<boolean> {
 	});
 }
 
-export async function testHandler (path: string = './tests'): Promise<boolean> {
+export async function lintHandler() {
+	await run(`npx prettier --use-tabs --single-quote --write .`);
+}
+
+export async function testHandler(path: string = './tests'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		const files = readdirSync(path);
 		for (const filename of files) {
@@ -241,10 +280,12 @@ export async function testHandler (path: string = './tests'): Promise<boolean> {
 	});
 }
 
-export function compileHandler (path: string = '.'): Promise<boolean> {
+export function compileHandler(path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
 		tsconfig.write();
-		return run('yarn').then((suc: boolean) => suc && run('tsc')).then(resolve);
+		return run('yarn')
+			.then((suc: boolean) => suc && run('tsc'))
+			.then(resolve);
 	});
 }
 
@@ -267,12 +308,15 @@ export async function _upload_file (path: string, unlink: boolean = false): Prom
 
 type success = boolean;
 
-export function _upload_dir (path: string, unlink: boolean = false): Promise<success> {
+export function _upload_dir(
+	path: string,
+	unlink: boolean = false
+): Promise<success> {
 	return new Promise(async (resolve, reject) => {
 		let hasFailed = 0;
 		const stat = statSync(path);
 		if (!stat.isDirectory()) {
-			return resolve(!!await _upload_file(path, unlink));
+			return resolve(!!(await _upload_file(path, unlink)));
 		}
 		const files = readdirSync(path);
 		for (const filename of files) {
@@ -287,9 +331,13 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 					if (stat.isDirectory()) {
 						if (linked.includes(path)) {
 							++hasFailed;
-							console.log(`Symlink ${file}->${linked} is recursive, skipping...`);
+							console.log(
+								`Symlink ${file}->${linked} is recursive, skipping...`
+							);
 						} else if (await _upload_dir(file, false)) {
-							console.log(`Directory ${file}->${linked} processed successfully.`);
+							console.log(
+								`Directory ${file}->${linked} processed successfully.`
+							);
 							if (unlink) {
 								unlinkSync(file);
 							}
@@ -308,11 +356,13 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 					unlinkSync(file);
 				}
 			} else if (stat.isDirectory()) {
-				hasFailed += +!await _upload_dir(file, unlink)
-					.catch(_error => false);
+				hasFailed += +!(await _upload_dir(file, unlink).catch(
+					(_error) => false
+				));
 			} else {
-				hasFailed += +!await _upload_file(file, unlink)
-					.catch(_error => false);
+				hasFailed += +!(await _upload_file(file, unlink).catch(
+					(_error) => false
+				));
 			}
 		}
 		if (hasFailed) return resolve(false);
@@ -321,21 +371,25 @@ export function _upload_dir (path: string, unlink: boolean = false): Promise<suc
 	});
 }
 
-export async function cloudHandler (path: string = '.', {
-	ignore = DEFAULTS.CLOUD_HANDLER_IGNORE,
-	keep = DEFAULTS.CLOUD_HANDLER_KEEP,
-	unlink = DEFAULTS.CLOUD_HANDLER_UNLINK,
-	unlink_by_default = false,
-}: {
-	ignore?: string[],
-	keep?: string[],
-	unlink?: string[],
-	unlink_by_default?: boolean,
-}): Promise<boolean> {
+export async function cloudHandler(
+	path: string = '.',
+	{
+		ignore = DEFAULTS.CLOUD_HANDLER_IGNORE,
+		keep = DEFAULTS.CLOUD_HANDLER_KEEP,
+		unlink = DEFAULTS.CLOUD_HANDLER_UNLINK,
+		unlink_by_default = false,
+	}: {
+		ignore?: string[];
+		keep?: string[];
+		unlink?: string[];
+		unlink_by_default?: boolean;
+	}
+): Promise<boolean> {
 	let success = true;
 	const files = readdirSync(path);
 	for (const filename of files) {
-		let _ignore: boolean = false, _unlink: boolean = unlink_by_default;
+		let _ignore: boolean = false,
+			_unlink: boolean = unlink_by_default;
 		if (ignore.includes(filename)) {
 			_ignore = true;
 		}
@@ -346,14 +400,21 @@ export async function cloudHandler (path: string = '.', {
 			_ignore = false;
 			_unlink = true;
 		}
-		if (!_ignore) success = (!!await _upload_dir(resolvePath(path, filename), _unlink).catch(() => false)) && success;
+		if (!_ignore)
+			success =
+				!!(await _upload_dir(resolvePath(path, filename), _unlink).catch(
+					() => false
+				)) && success;
 	}
 	return success;
 }
 
-export function gpl (): boolean {
+export function gpl(): boolean {
 	try {
-		fs.writeFileSync('./LICENSE.md', fs.readFileSync(resolvePath(__dirname, '..', 'gpl-3.0.md')));
+		fs.writeFileSync(
+			'./LICENSE.md',
+			fs.readFileSync(resolvePath(__dirname, '..', 'gpl-3.0.md'))
+		);
 		if (fs.existsSync('./LICENSE')) fs.unlinkSync('./LICENSE');
 		const pacjson = read('./package.json');
 		pacjson.license = 'GPL-3.0-or-later';
