@@ -28,7 +28,7 @@ Arguments
 
 `init` \- initialize project
 
-`lint` \- run [prettier](<https://npmjs.com/package/prettier>)
+`lint` \- run [prettier](https://npmjs.com/package/prettier)
 
 `clean` \- clear directory
 
