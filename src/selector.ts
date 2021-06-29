@@ -3,7 +3,7 @@ import prompts from 'prompts';
 // Do no change this.
 const NAME = 'NAME';
 
-async function selector(
+export async function selector(
 	question: string,
 	options: {
 		[returned_value: string]: string;
