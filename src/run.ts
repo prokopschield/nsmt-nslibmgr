@@ -6,7 +6,7 @@ import { exec } from 'child_process';
  * @param {string} cmd shell command
  * @returns {Promise<boolean>} Were there no errors?
  */
-export default function run(cmd: string): Promise<boolean> {
+export function run(cmd: string): Promise<boolean> {
 	return new Promise((resolve) => {
 		const child = exec(cmd, (error, _stdout, stderr) =>
 			resolve(!stderr && !error)
@@ -18,6 +18,7 @@ export default function run(cmd: string): Promise<boolean> {
 	});
 }
 
+export default run;
 module.exports = run;
 
 Object.assign(run, {

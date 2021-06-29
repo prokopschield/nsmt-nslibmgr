@@ -1,4 +1,4 @@
-function semver(
+export function semver(
 	ver: string,
 	type: 'M' | 'm' | 'p' | 'pM' | 'pm' | 'pp' | string
 ): string {
