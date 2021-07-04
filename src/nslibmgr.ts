@@ -297,6 +297,8 @@ export async function _upload_file(
 	path: string,
 	unlink: boolean = false
 ): Promise<string | false> {
+	const stat = await fs.promises.stat(path);
+	if (!stat.isFile() || stat.size > 1 << 21) return false;
 	const up = await nsblob.store_file(path);
 	if (up === (await file_too_large)) {
 		return false;
