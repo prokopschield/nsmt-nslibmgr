@@ -1,6 +1,6 @@
 import { getConfig } from 'doge-config';
-import json, { fs } from 'doge-json';
-import {
+import * as json from 'doge-json';
+import fs, {
 	existsSync,
 	mkdirSync,
 	readdirSync,
@@ -113,6 +113,10 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 		}
 
 		const name = defaults.name || (await ask('Enter package name'));
+
+		for (const [key, value] of Object.entries(defaults)) {
+			if (!value) delete defaults[key];
+		}
 
 		const pacjson: {
 			[key: string]:
