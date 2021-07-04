@@ -299,11 +299,12 @@ export async function _upload_file(
 	unlink: boolean = false
 ): Promise<string | false> {
 	const up = await nsblob.store_file(path);
-	return up === (await file_too_large)
-		? up
-		: unlink
-		? (await fs.promises.unlink(path), false)
-		: up;
+	if (up === (await file_too_large)) {
+		return false;
+	} else if (unlink) {
+		await fs.promises.unlink(path);
+	}
+	return up;
 }
 
 type success = boolean;
