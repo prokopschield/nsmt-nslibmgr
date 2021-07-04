@@ -37,9 +37,8 @@ export enum ERROR {
 }
 
 export const DEFAULTS = {
-	CLOUD_HANDLER_IGNORE: ['.', '..', '.env', '.git', 'node_modules'],
+	CLOUD_HANDLER_IGNORE: ['.', '..', '.env', '.git', 'config', 'node_modules'],
 	CLOUD_HANDLER_KEEP: [
-		'config',
 		'docs',
 		'examples',
 		'lib',
@@ -78,7 +77,7 @@ export const DEFAULTS = {
 		'tsconfig.json',
 		'yarn.lock',
 	],
-	CLOUD_HANDLER_UNLINK: [],
+	CLOUD_HANDLER_UNLINK: ['package-lock.json'],
 };
 
 export async function creativeHandler(path: string = '.'): Promise<boolean> {
