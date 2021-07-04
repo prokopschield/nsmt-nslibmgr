@@ -1,5 +1,5 @@
 import { getConfig } from 'doge-config';
-import { read, write, fs } from 'doge-json';
+import json, { fs } from 'doge-json';
 import {
 	existsSync,
 	mkdirSync,
@@ -109,7 +109,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 				  };
 		} = {};
 		if (existsSync(packjsonpath)) {
-			defaults = read(packjsonpath);
+			defaults = json.read(packjsonpath);
 		}
 
 		const name = defaults.name || (await ask('Enter package name'));
@@ -168,7 +168,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 		}
 		await io.write(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 		await run('npm init -y');
-		write(packjsonpath, read(packjsonpath));
+		json.write(packjsonpath, json.read(packjsonpath));
 		return resolve(true);
 	});
 }
@@ -224,7 +224,7 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		console.log('Type "publish" to publish.');
 		if ((await readline()) === 'publish') {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
-			write(file, pacjson);
+			json.write(file, pacjson);
 			gitignore_set('lib', false);
 			gitignore_set('node_modules', true, true);
 			npmignore.add(...gitignore.entries, 'src/', 'tsconfig.json');
@@ -243,7 +243,7 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 			}
 		}
 		pacjson.version = ov;
-		write(file, pacjson);
+		json.write(file, pacjson);
 		gitignore_set('lib', true, true);
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);
@@ -412,9 +412,9 @@ export function gpl(): boolean {
 			fs.readFileSync(resolvePath(__dirname, '..', 'gpl-3.0.md'))
 		);
 		if (fs.existsSync('./LICENSE')) fs.unlinkSync('./LICENSE');
-		const pacjson = read('./package.json');
+		const pacjson = json.read('./package.json');
 		pacjson.license = 'GPL-3.0-or-later';
-		write('./package.json', pacjson);
+		json.write('./package.json', pacjson);
 		return true;
 	} catch (error) {
 		return false;
