@@ -2,9 +2,7 @@ import { read, write, fs } from 'doge-json';
 import {
 	existsSync,
 	mkdirSync,
-	readFileSync,
 	readdirSync,
-	writeFileSync,
 	createReadStream,
 	statSync,
 	unlink as unlinkFile,
@@ -20,6 +18,7 @@ import {
 	resolve as resolvePath,
 	relative as relativePath,
 } from 'path';
+import io from 'serial-async-io';
 import { ask, readline } from './ask';
 import run from './run';
 import selector from './selector';
@@ -92,14 +91,11 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 			dir.filter((a) => a && a !== 'cli.ts').shift() || 'index.ts'
 		);
 		if (!existsSync(index)) {
-			writeFileSync(index, '// This should be the entry point to your module');
+			await io.write(index, '');
 		}
 		let cli = resolvePath(src, 'cli.ts');
 		if (!existsSync(cli)) {
-			writeFileSync(
-				cli,
-				"#!/usr/bin/env node\n\nrequire('.');\n// This file should be the entry point for command-line execution."
-			);
+			await io.write(cli, '#!/usr/bin/env node\n');
 		}
 		gitignore.add('node_modules/');
 		const packjsonpath = resolvePath(path, 'package.json');
@@ -111,7 +107,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 				  };
 		} = {};
 		if (existsSync(packjsonpath)) {
-			defaults = JSON.parse(readFileSync(packjsonpath, 'utf-8'));
+			defaults = read(packjsonpath);
 		}
 
 		const name = defaults.name || (await ask('Enter package name'));
@@ -168,16 +164,9 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 				defaults[key] ? (pacjson[key] = defaults[key]) : delete pacjson[key];
 			}
 		}
-		writeFileSync(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
+		await io.write(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 		await run('npm init -y');
-		writeFileSync(
-			packjsonpath,
-			JSON.stringify(
-				JSON.parse(readFileSync(packjsonpath, 'utf-8')),
-				null,
-				'\t'
-			) + '\n'
-		);
+		write(packjsonpath, read(packjsonpath));
 		return resolve(true);
 	});
 }
@@ -233,7 +222,7 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		console.log('Type "publish" to publish.');
 		if ((await readline()) === 'publish') {
 			console.log(`Publish where? (${publish_options.join(', ')})`);
-			writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
+			write(file, pacjson);
 			gitignore_set('lib', false);
 			gitignore_set('node_modules', true, true);
 			npmignore.add(...gitignore.entries, 'src/', 'tsconfig.json');
@@ -252,7 +241,7 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 			}
 		}
 		pacjson.version = ov;
-		writeFileSync(file, JSON.stringify(pacjson, null, '\t') + '\n');
+		write(file, pacjson);
 		gitignore_set('lib', true, true);
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);

@@ -19,10 +19,10 @@
   dependencies:
     "@types/node" "*"
 
-doge-config@^0.3.0-3:
-  version "0.3.0-3"
-  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.0-3.tgz#1ddd0916bbe2d94e04865dd83a61118fd1360ade"
-  integrity sha512-CxHA26bLknaf05IiMoYmO7xaH4aMN42whIdnAtsADsaBPGbgSHzFVL0RaZ+HF+eRPkGZzc+p3NcjjoylNAzJlw==
+doge-config@^0.3.0-4:
+  version "0.3.0-4"
+  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.0-4.tgz#0b94aa93513a960aa62d429c151501844b93e98f"
+  integrity sha512-Z8QScefOwbVze/x2MTajyMMjplC1Tk8/2Nf/CbZUxFBd9lMbrpmX5dIDJbMi8PCDwfqEa77gaBTxI/FXzfXdJQ==
   dependencies:
     doge-json "^1.0.4"
 
@@ -50,6 +50,11 @@ prompts@^2.4.1:
   dependencies:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
+
+serial-async-io@^0.1.0-1:
+  version "0.1.0-1"
+  resolved "https://registry.yarnpkg.com/serial-async-io/-/serial-async-io-0.1.0-1.tgz#5cb7326ffffc2dd7446b9c004dc2db534c58ce4e"
+  integrity sha512-+V/tLjE2AtrBbqwAUIgk6Zpo7JAr9SbrYnSfjiUJcb3W1ucmwh96NNZZduU/9JDZuADH+jBvu4Osl1RMb4C7RQ==
 
 sisteransi@^1.0.5:
   version "1.0.5"
