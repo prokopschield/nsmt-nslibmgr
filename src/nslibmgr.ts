@@ -20,7 +20,7 @@ import {
 	resolve as resolvePath,
 	relative as relativePath,
 } from 'path';
-import io from 'serial-async-io';
+import * as io from 'serial-async-io';
 import { ask, readline } from './ask';
 import run from './run';
 import selector from './selector';
