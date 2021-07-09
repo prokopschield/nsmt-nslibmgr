@@ -13,12 +13,12 @@
 	"author": "Prokop Schield",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"dependencies": {
-		"doge-config": "^0.3.0-4",
+		"doge-config": "^0.3.0-3",
 		"nodesite.eu": "^1.2.0-10",
 		"nsblob": "^0.2.6",
 		"oplist": "^0.0.0-3",
 		"prompts": "^2.4.1",
-		"serial-async-io": "^0.1.0-1"
+		"serial-async-io": "^0.1.0-2"
 	},
 	"devDependencies": {
 		"@types/node": ">=14",

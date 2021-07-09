@@ -48,7 +48,7 @@ debug@~4.3.1:
   dependencies:
     ms "2.1.2"
 
-doge-config@^0.3.0-3, doge-config@^0.3.0-4:
+doge-config@^0.3.0-3:
   version "0.3.0-4"
   resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.0-4.tgz#0b94aa93513a960aa62d429c151501844b93e98f"
   integrity sha512-Z8QScefOwbVze/x2MTajyMMjplC1Tk8/2Nf/CbZUxFBd9lMbrpmX5dIDJbMi8PCDwfqEa77gaBTxI/FXzfXdJQ==
@@ -165,10 +165,10 @@ prompts@^2.4.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-serial-async-io@^0.1.0-1:
-  version "0.1.0-1"
-  resolved "https://registry.yarnpkg.com/serial-async-io/-/serial-async-io-0.1.0-1.tgz#5cb7326ffffc2dd7446b9c004dc2db534c58ce4e"
-  integrity sha512-+V/tLjE2AtrBbqwAUIgk6Zpo7JAr9SbrYnSfjiUJcb3W1ucmwh96NNZZduU/9JDZuADH+jBvu4Osl1RMb4C7RQ==
+serial-async-io@^0.1.0-2:
+  version "0.1.0-2"
+  resolved "https://registry.yarnpkg.com/serial-async-io/-/serial-async-io-0.1.0-2.tgz#65e34bbe66073aa6f37b157f4d36117d3d43e8b7"
+  integrity sha512-3vU/vs/DS3v/raZ31lcyW/4q3JXp2bvh7yRuyTIDJTah8BSPjq/XUFmEr0M9qRLfwQz6If/Cj7+1KbpGqQoLeQ==
 
 sisteransi@^1.0.5:
   version "1.0.5"
