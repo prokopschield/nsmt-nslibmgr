@@ -10,8 +10,23 @@ export function semver(
 		0,
 	];
 	if (type.length == 2) {
-		if (pre) ++pre;
-		else {
+		if (pre) {
+			if (
+				type === 'pp' ||
+				(type === 'pm' && !pat) ||
+				(type === 'pM' && !pat && !min)
+			) {
+				++pre;
+			} else if (type === 'pm') {
+				++min;
+				pre = 1;
+				pat = 0;
+			} else {
+				++maj;
+				pre = 1;
+				pat = min = 0;
+			}
+		} else {
 			switch (type[1]) {
 				case 'M': {
 					++maj;
@@ -34,11 +49,19 @@ export function semver(
 	} else
 		switch (type[0]) {
 			case 'M': {
-				pre ? (min = pat = pre = 0) : (++maj, (min = pat = pre = 0));
+				if (pre && !pat && !min) {
+					min = pat = pre = 0;
+				} else {
+					++maj, (min = pat = pre = 0);
+				}
 				break;
 			}
 			case 'm': {
-				pre ? (pat = pre = 0) : (++min, (pat = pre = 0));
+				if (pre && !pat) {
+					pat = pre = 0;
+				} else {
+					++min, (pat = pre = 0);
+				}
 				break;
 			}
 			default: {
