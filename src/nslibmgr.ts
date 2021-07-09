@@ -201,12 +201,12 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		pacjson.version = semver(
 			pacjson.version,
 			await selector('Release type?', {
-				pp: 'pre-release (x.x.x-X)',
-				p: 'patch (x.x.X)',
-				pm: 'pre-minor (x.x.0-X)',
-				m: 'minor (x.X.0)',
-				pM: 'pre-major (x.0.0-X)',
-				M: 'major (X.0.0)',
+				pp: `pre-release (${semver(pacjson.version, 'pp')})`,
+				p: `patch (${semver(pacjson.version, 'p')})`,
+				pm: `pre-minor (${semver(pacjson.version, 'pm')})`,
+				m: `minor (${semver(pacjson.version, 'm')})`,
+				pM: `pre-major (${semver(pacjson.version, 'pM')})`,
+				M: `major (${semver(pacjson.version, 'M')})`,
 			})
 		);
 		if (
