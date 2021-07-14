@@ -291,7 +291,9 @@ function warnSymlinkSupport() {
 }
 
 const nsblob_config = getConfig('nsblob');
-const file_too_large = nsblob.store(nsblob_config.str.file_too_large);
+const file_too_large = nsblob.store(
+	nsblob_config.str.file_too_large || 'File was too large.'
+);
 
 export async function _upload_file(
 	path: string,
