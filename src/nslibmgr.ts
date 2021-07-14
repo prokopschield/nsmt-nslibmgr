@@ -272,7 +272,7 @@ export async function testHandler(path: string = './tests'): Promise<boolean> {
 
 export function compileHandler(path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
-		tsconfig.write();
+		tsconfig.__save();
 		return run('yarn')
 			.then((suc: boolean) => suc && run('tsc'))
 			.then(resolve);
