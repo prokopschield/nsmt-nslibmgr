@@ -13,7 +13,7 @@
 	"author": "Prokop Schield",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"dependencies": {
-		"doge-config": "^0.3.4",
+		"doge-config": "^0.3.5",
 		"nodesite.eu": "^1.2.0-10",
 		"nsblob": "^0.2.6",
 		"oplist": "^0.0.0-3",
