@@ -144,7 +144,6 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 								test: 'npx nslibmgr test',
 						  },
 				author: defaults.author || (await ask("Author's name?")),
-				license: defaults.license || (await ask('License?')),
 			},
 			...defaults,
 		};
@@ -172,6 +171,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 		await io.write(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 		await run('npm init -y');
 		json.write(packjsonpath, json.read(packjsonpath));
+		if (!pacjson.license) gpl();
 		return resolve(true);
 	});
 }
