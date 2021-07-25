@@ -62,6 +62,7 @@ export const DEFAULTS = {
 		'CHANGELOG.md',
 		'CODE_OF_CONDUCT.md',
 		'DESIGN_GUIDELINES.md',
+		'.gitmodules',
 		'.gitignore',
 		'.npmignore',
 		'.eslintignore',
