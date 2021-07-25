@@ -37,14 +37,21 @@ export enum ERROR {
 }
 
 export const DEFAULTS = {
-	CLOUD_HANDLER_IGNORE: ['.', '..', '.env', '.git', 'config', 'node_modules'],
+	CLOUD_HANDLER_IGNORE: [
+		'.',
+		'..',
+		'.env',
+		'.git',
+		'config',
+		'modules',
+		'node_modules',
+	],
 	CLOUD_HANDLER_KEEP: [
 		'docs',
 		'examples',
 		'dist',
 		'lib',
 		'src',
-		'modules',
 		'test',
 		'tests',
 		'types',
