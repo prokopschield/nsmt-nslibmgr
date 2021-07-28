@@ -1,7 +1,7 @@
 {
 	"name": "nsmt-nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
@@ -18,7 +18,7 @@
 		"nsblob": "^0.2.6",
 		"oplist": "^0.0.0-3",
 		"prompts": "^2.4.1",
-		"serial-async-io": "^0.1.0-2"
+		"serial-async-io": "^0.1.0-3"
 	},
 	"devDependencies": {
 		"@types/node": ">=14",

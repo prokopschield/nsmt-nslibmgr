@@ -27,8 +27,8 @@ import selector from './selector';
 import semver from './semver';
 import tsconfig from './tsconfig';
 
-const gitignore = new OpList('.gitignore');
-const npmignore = new OpList('.npmignore');
+export const gitignore = new OpList('.gitignore');
+export const npmignore = new OpList('.npmignore');
 
 export enum ERROR {
 	ABORTED = 'Aborted.',
@@ -36,59 +36,8 @@ export enum ERROR {
 	SIZE_LIMIT_EXCEEDED = 'Size limit exceeded.',
 }
 
-export const DEFAULTS = {
-	CLOUD_HANDLER_IGNORE: [
-		'.',
-		'..',
-		'.env',
-		'.git',
-		'config',
-		'modules',
-		'node_modules',
-	],
-	CLOUD_HANDLER_KEEP: [
-		'docs',
-		'examples',
-		'dist',
-		'lib',
-		'src',
-		'test',
-		'tests',
-		'types',
-		'util',
-		'package.json',
-		'index.js',
-		'index.ts',
-		'index.d.ts',
-		'app.js',
-		'app.ts',
-		'app.d.ts',
-		'gpl-3.0.md',
-		'LICENSE.md',
-		'LICENSE',
-		'README.md',
-		'README.txt',
-		'SECURITY.md',
-		'CONSTRIBUTING.md',
-		'CHANGELOG.md',
-		'CODE_OF_CONDUCT.md',
-		'DESIGN_GUIDELINES.md',
-		'.gitmodules',
-		'.gitignore',
-		'.npmignore',
-		'.eslintignore',
-		'.prettierignore',
-		'.prettierrc.js',
-		'.commitlint.config.js',
-		'.editorconfig',
-		'.whitesource',
-		'.vscode',
-		'.github',
-		'tsconfig.json',
-		'yarn.lock',
-	],
-	CLOUD_HANDLER_UNLINK: ['package-lock.json'],
-};
+import DEFAULTS from './defaults';
+export { DEFAULTS };
 
 export async function creativeHandler(path: string = '.'): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
