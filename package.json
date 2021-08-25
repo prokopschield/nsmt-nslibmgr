@@ -1,7 +1,7 @@
 {
 	"name": "nsmt-nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
@@ -13,15 +13,14 @@
 	"author": "Prokop Schield",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"dependencies": {
-		"doge-config": "^0.3.5",
-		"nodesite.eu": "^1.2.0-10",
-		"nsblob": "^0.2.6",
+		"doge-config": "^0.3.9",
+		"nsblob": "^0.2.8",
 		"oplist": "^0.0.0-3",
 		"prompts": "^2.4.1",
 		"serial-async-io": "^0.1.0"
 	},
 	"devDependencies": {
-		"@types/node": ">=14",
+		"@types/node": "^14",
 		"@types/prompts": "^2.0.11"
 	},
 	"directories": {
