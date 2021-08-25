@@ -3,9 +3,9 @@
 
 
 "@types/node@*", "@types/node@>=14":
-  version "16.3.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.3.3.tgz#0c30adff37bbbc7a50eb9b58fae2a504d0d88038"
-  integrity sha512-8h7k1YgQKxKXWckzFCMfsIwn0Y61UK6tlD6y2lOb3hTOIMlK3t9/QwHOhc81TwU+RMf0As5fj7NPjroERCnejQ==
+  version "14.17.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.11.tgz#82d266d657aec5ff01ca59f2ffaff1bb43f7bf0f"
+  integrity sha512-n2OQ+0Bz6WEsUjrvcHD1xZ8K+Kgo4cn9/w94s1bJS690QMUWfJPW/m7CCb7gPkA1fcYwL2UpjXP/rq/Eo41m6w==
 
 "@types/prompts@^2.0.11":
   version "2.0.14"
@@ -14,22 +14,22 @@
   dependencies:
     "@types/node" "*"
 
-doge-config@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.5.tgz#9a0c07d17ae41c6e27d2c00d6d57e8767f7678da"
-  integrity sha512-V1wVOVhN0WSEkREMR6ZqcKHcPK71D/Z6BeTxOijUWaLd2PX9o/vu0Vxo8Enl9eIjemetf/ppuG8U87iRGrFdkg==
+doge-config@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.3.9.tgz#99e387edb5e1d29f3d2b389286a3f419f2801bf4"
+  integrity sha512-iQrAC2QIxMIBOkuE5doaPSEp8ua4IzCuVqRKE9cSngCm5+PCr71AQdZrWE7GcjxPfteK2U6UzLMPD7pa1atf9A==
   dependencies:
-    doge-json "^1.1.0-3"
+    doge-json "^1.1.1"
 
 doge-json@*:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.0.4.tgz#2f4196ac7f9d79b582fb1e747c3d78bc5abcf794"
   integrity sha512-4E/33E0ylyCsGyM5LDEkBTxtq7sI5hV/hgMZl9naqtu8iV+Sow/t2j1CrUqdEWSieLxHtOJ7HfgbLPuDo37k7A==
 
-doge-json@^1.1.0-3:
-  version "1.1.0-3"
-  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.1.0-3.tgz#4cdedf2daf6116bce73c26aed7e52c6041804c4f"
-  integrity sha512-TO+n1rJOto2ildgC8KpaZ1OwrGTi+EL/F9dwnn7o4MMMuoGP20aP4p5jkO69C0SGGVVPgsk8+NxaClA5boGDYQ==
+doge-json@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.1.1.tgz#0a10d7c378a4ffe24ff8adf036417a8e50e7d399"
+  integrity sha512-rVqwd+zjDz0MaLjuVxU43jg7yQmUFOPpjnX70gyoed9kuZ3RbaPpkVW3d/ECTnE0Q4A4cSyjNfCCvRBotoNCdg==
 
 kleur@^3.0.3:
   version "3.0.3"
