@@ -55,7 +55,7 @@ doge-config@^0.3.9:
   dependencies:
     doge-json "^1.1.1"
 
-doge-json@*, doge-json@^1.1.1:
+doge-json@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.1.1.tgz#0a10d7c378a4ffe24ff8adf036417a8e50e7d399"
   integrity sha512-rVqwd+zjDz0MaLjuVxU43jg7yQmUFOPpjnX70gyoed9kuZ3RbaPpkVW3d/ECTnE0Q4A4cSyjNfCCvRBotoNCdg==
@@ -115,12 +115,12 @@ nsblob@^0.2.8:
     nodesite.eu-core "^1.2.0"
     serial-async-io "^0.1.0"
 
-oplist@^0.0.0-3:
-  version "0.0.0-3"
-  resolved "https://registry.yarnpkg.com/oplist/-/oplist-0.0.0-3.tgz#3b01d31e4117e0a4eb230042d0c11b7b0052d99b"
-  integrity sha512-XT5qZ/4Nxqu9qTBO7XABMz4uH+JauQhz1oyKn5olOdIhQK7OGrsSsU95dHVsnNWBgTSbMAoUMyXhzmne4Mf3tQ==
+oplist@^0.0.0-4:
+  version "0.0.0-4"
+  resolved "https://registry.yarnpkg.com/oplist/-/oplist-0.0.0-4.tgz#0010bb7ee41a0cb018936db677c40c6511d1b8b1"
+  integrity sha512-sfllUtG5f77DZdSV3kWxf6lqDIFoFiyhpxE2AQQNgDUGiQV4jgqv2Fl5owrdlDCtSnS+JM7gZlJ4TLerOSVs3Q==
   dependencies:
-    doge-json "*"
+    doge-json "^1.1.1"
 
 parseqs@0.0.6:
   version "0.0.6"
