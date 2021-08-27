@@ -64,7 +64,8 @@ new Promise(async (accept, reject) => {
 				await new Promise((resolve) => {
 					const child = exec(
 						'npm install -g nslibmgr',
-						(error, stdout, stderr) => resolve({ error, stdout, stderr })
+						(error, stdout, stderr) =>
+							resolve({ error, stdout, stderr })
 					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
@@ -77,8 +78,10 @@ new Promise(async (accept, reject) => {
 			case 'r':
 				console.log('Running!');
 				await new Promise((resolve) => {
-					const child = exec('node lib/index', (error, stdout, stderr) =>
-						resolve({ error, stdout, stderr })
+					const child = exec(
+						'node lib/index',
+						(error, stdout, stderr) =>
+							resolve({ error, stdout, stderr })
 					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);
@@ -122,7 +125,12 @@ new Promise(async (accept, reject) => {
 					RESULT(
 						await cloudHandler('.', {
 							unlink_by_default: true,
-							unlink: ['package-lock.json', 'yarn.lock', 'node_modules', 'lib'],
+							unlink: [
+								'package-lock.json',
+								'yarn.lock',
+								'node_modules',
+								'lib',
+							],
 						})
 					)
 				);
@@ -148,8 +156,10 @@ new Promise(async (accept, reject) => {
 				console.log(RESULT(await compileHandler()));
 				console.log('Running!');
 				await new Promise((resolve) => {
-					const child = exec('node lib/index', (error, stdout, stderr) =>
-						resolve({ error, stdout, stderr })
+					const child = exec(
+						'node lib/index',
+						(error, stdout, stderr) =>
+							resolve({ error, stdout, stderr })
 					);
 					if (child.stdin && child.stdout && child.stderr) {
 						process.stdin.pipe(child.stdin);

@@ -12,9 +12,13 @@ export function run(cmd: string): Promise<boolean> {
 			resolve(!stderr && !error)
 		);
 		if (process.stdout && child.stdout)
-			child.stdout.on('data', (chunk: Buffer) => process.stdout.write(chunk));
+			child.stdout.on('data', (chunk: Buffer) =>
+				process.stdout.write(chunk)
+			);
 		if (process.stderr && child.stderr)
-			child.stderr.on('data', (chunk: Buffer) => process.stderr.write(chunk));
+			child.stderr.on('data', (chunk: Buffer) =>
+				process.stderr.write(chunk)
+			);
 	});
 }
 
