@@ -15,14 +15,14 @@
 	"license": "SEE LICENSE IN LICENSE.md",
 	"dependencies": {
 		"doge-config": "^0.3.10",
-		"nsblob": "^0.2.8",
+		"nsblob": "^0.2.9",
 		"oplist": "^0.0.0-5",
 		"prompts": "^2.4.1",
 		"serial-async-io": "^0.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^14",
-		"@types/prompts": "^2.0.11"
+		"@types/prompts": "^2.0.14"
 	},
 	"directories": {
 		"lib": "lib",
