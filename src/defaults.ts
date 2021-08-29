@@ -13,6 +13,8 @@ export const CLOUD_HANDLER_KEEP = [
 	'examples',
 	'dist',
 	'lib',
+	'public',
+	'prisma',
 	'src',
 	'test',
 	'tests',
