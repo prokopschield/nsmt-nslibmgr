@@ -138,11 +138,11 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 	});
 }
 
-async function gitignore_set(
+function gitignore_set(
 	dirname: string,
 	shouldExist?: boolean,
 	isDirectory?: boolean
-): Promise<boolean> {
+): boolean {
 	try {
 		shouldExist
 			? gitignore.add(isDirectory ? `${dirname}/` : dirname)
