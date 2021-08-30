@@ -242,11 +242,46 @@ export async function testHandler(path: string = './tests'): Promise<boolean> {
 	});
 }
 
+/**
+ * Copy a file or a directory
+ * @param {string} from source path
+ * @param {string} to destination path
+ * @returns whether copy was successful
+ */
+export async function copy(from: string, to: string): Promise<boolean> {
+	try {
+		let success = true;
+		const stat = await fs.promises.stat(from);
+		if (stat.isDirectory()) {
+			if (!fs.existsSync(to)) {
+				fs.mkdirSync(to);
+			}
+			for (const file of await fs.promises.readdir(from)) {
+				const fp = resolvePath(from, file);
+				const ft = resolvePath(to, file);
+				success &&= await copy(fp, ft);
+			}
+		} else if (stat.isFile()) {
+			const data = await io.read(from);
+			if (fs.existsSync(to)) {
+				if (!Buffer.compare(data, await io.read(to))) {
+					return true;
+				}
+			}
+			await io.write(to, data);
+		}
+		return success;
+	} catch (error) {
+		return false;
+	}
+}
+
 export function compileHandler(path: string = '.'): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
 		tsconfig.__save();
 		return run('yarn')
-			.then((suc: boolean) => suc && run('tsc'))
+			.then(async (suc: boolean) => suc && (await run('tsc')))
+			.then(async (suc: boolean) => (await copy('src', 'lib')) && suc)
 			.then(resolve);
 	});
 }
