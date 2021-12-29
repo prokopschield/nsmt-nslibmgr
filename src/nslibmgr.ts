@@ -200,20 +200,10 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 			npmignore.remove('lib');
 			switch ((await readline()) || 'yarn') {
 				case 'npm': {
-					return run('npm publish')
-						.then(
-							(success) =>
-								gitignore_set('lib', true, true) && success
-						)
-						.then(resolve);
+					return run('npm publish').then(postPublish).then(resolve);
 				}
 				case 'yarn': {
-					return run('yarn publish')
-						.then(
-							(success) =>
-								gitignore_set('lib', true, true) && success
-						)
-						.then(resolve);
+					return run('yarn publish').then(postPublish).then(resolve);
 				}
 			}
 		}
@@ -223,6 +213,11 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		console.log('Publishing aborted!');
 		reject(ERROR.ABORTED);
 	});
+}
+
+async function postPublish(success: boolean): Promise<boolean> {
+	success &&= gitignore_set('lib', true, true);
+	return success;
 }
 
 export async function lintHandler() {
