@@ -51,10 +51,10 @@ prompts@^2.4.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-serial-async-io@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/serial-async-io/-/serial-async-io-0.3.0.tgz#27318e7e877ee9e225a26c359ef289b31214074b"
-  integrity sha512-1HbyC6RmPQxCImY9XZNOH7w/eXNbG2X7+hDYiby2Mdlltp3fme0WMiGl1nvO4Xd7tye3c6PJtVZBV7IaVyegfg==
+serial-async-io@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/serial-async-io/-/serial-async-io-0.3.2.tgz#0fbcfdbbdcd093caefd44f9cb0b68ea7d6167863"
+  integrity sha512-Uk3xSDyiLTCAdPjzNWU5bHk6MqRj4cUi/MqD2lPSg9k/PfJpZzpA+yEgWEIWH3SiWtjUc1eDc4T/iNbBiZ0DNQ==
 
 sisteransi@^1.0.5:
   version "1.0.5"

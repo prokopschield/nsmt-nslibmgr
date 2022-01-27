@@ -45,6 +45,8 @@ export const CLOUD_HANDLER_KEEP = [
 	'.eslintignore',
 	'.prettierignore',
 	'.prettierrc.js',
+	'.prettierrc',
+	'.eslintrc.json',
 	'.commitlint.config.js',
 	'.editorconfig',
 	'.whitesource',
