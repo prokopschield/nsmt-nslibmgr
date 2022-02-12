@@ -91,7 +91,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 				version: defaults.version || '0.0.0',
 				main: defaults.main || 'lib/index.js',
 				bin: defaults.bin || {
-					[name.toString()]: 'lib/cli.js',
+					[String(name)]: 'lib/cli.js',
 				},
 				scripts:
 					typeof defaults.scripts === 'object'
