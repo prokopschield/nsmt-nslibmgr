@@ -53,7 +53,7 @@ export const CLOUD_HANDLER_KEEP = [
 	'.vscode',
 	'.github',
 	'tsconfig.json',
-	'yarn.lock',
+	process.env.NSLIBMGR_USE_PNPM ? 'pnpm-lock.yaml' : 'yarn.lock',
 ];
 
 export const CLOUD_HANDLER_UNLINK = ['package-lock.json'];
