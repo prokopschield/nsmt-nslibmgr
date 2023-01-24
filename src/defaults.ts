@@ -21,6 +21,7 @@ export const CLOUD_HANDLER_KEEP = [
 	'types',
 	'util',
 	'Makefile',
+	'Dockerfile',
 	'package.json',
 	'index.js',
 	'index.ts',
