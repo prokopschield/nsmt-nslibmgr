@@ -291,37 +291,17 @@ function warnSymlinkSupport() {
 	}
 }
 
-export function _upload_file(
+export async function _upload_file(
 	path: string,
 	unlink: boolean = false
 ): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const stat = statSync(path);
-		if (stat.size > 2 ** 20) return reject(ERROR.SIZE_LIMIT_EXCEEDED);
-		const req = https.request(
-			'https://nslibmgr.nodesite.eu/static/upload',
-			{
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'Application/Octet-Stream',
-					'Content-Length': stat.size,
-					'X-Client': 'nslibmgr',
-				},
-			},
-			(res) => {
-				let b = '';
-				res.on('data', (data) => (b += data));
-				res.on('end', () =>
-					b.length === 64
-						? unlink
-							? unlinkFile(path, () => resolve(b))
-							: resolve(b)
-						: reject(ERROR.SIZE_LIMIT_EXCEEDED)
-				);
-			}
-		);
-		createReadStream(path).pipe(req);
-	});
+	const hashes = await _upload_stream(createReadStream(path));
+
+	if (unlink) {
+		await fs.promises.unlink(path);
+	}
+
+	return `[${hashes.join()}]`;
 }
 
 type success = boolean;
