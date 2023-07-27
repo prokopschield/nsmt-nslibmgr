@@ -1,7 +1,7 @@
 {
 	"name": "nsmt-nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.2.21",
+	"version": "0.2.22",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
@@ -16,7 +16,7 @@
 	"dependencies": {
 		"doge-config": "^0.3.16",
 		"doge-json": "^1.2.8",
-		"nsblob": "^0.2.10",
+		"nsblob64": "^0.2.24",
 		"oplist": "^0.0.0-7",
 		"prompts": "^2.4.2",
 		"serial-async-io": "^0.3.2"
