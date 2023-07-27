@@ -85,8 +85,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 			...{
 				name,
 				description:
-					defaults.description ||
-					(await ask('Please enter a description')),
+					defaults.description || (await ask('Please enter a description')),
 				version: defaults.version || '0.0.0',
 				main: defaults.main || 'lib/index.js',
 				bin: defaults.bin || {
@@ -117,21 +116,17 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 				? { ...pacjson.devDependencies }
 				: {};
 		if (!pacjson.devDependencies['@types/node'])
-			pacjson.devDependencies[
-				'@types/node'
-			] = `>=${process.version.substr(1, 2)}`;
+			pacjson.devDependencies['@types/node'] = `>=${process.version.substr(
+				1,
+				2
+			)}`;
 
 		for (const key of Object.keys(pacjson)) {
 			if (!pacjson[key]) {
-				defaults[key]
-					? (pacjson[key] = defaults[key])
-					: delete pacjson[key];
+				defaults[key] ? (pacjson[key] = defaults[key]) : delete pacjson[key];
 			}
 		}
-		await io.write(
-			packjsonpath,
-			JSON.stringify(pacjson, null, '\t') + '\n'
-		);
+		await io.write(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
 		await run('npm init -y');
 		json.write(packjsonpath, json.read(packjsonpath));
 		if (!pacjson.license) gpl();
@@ -178,9 +173,7 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 			!fs.existsSync(
 				resolvePath(
 					'.',
-					pacjson.main.includes('.js')
-						? pacjson.main
-						: `${pacjson.main}.js`
+					pacjson.main.includes('.js') ? pacjson.main : `${pacjson.main}.js`
 				)
 			)
 		) {
@@ -350,18 +343,12 @@ export function _upload_dir(
 								unlinkSync(file);
 							}
 						} else {
-							console.log(
-								`Directory ${file}->${linked} processing failed!`
-							);
+							console.log(`Directory ${file}->${linked} processing failed!`);
 						}
 					} else if (await _upload_file(file, unlink)) {
-						console.log(
-							`File ${file}->${linked} processed successfully.`
-						);
+						console.log(`File ${file}->${linked} processed successfully.`);
 					} else {
-						console.log(
-							`Symlink ${file}->${linked} processing failed!`
-						);
+						console.log(`Symlink ${file}->${linked} processing failed!`);
 						++hasFailed;
 					}
 				} else {
@@ -416,10 +403,9 @@ export async function cloudHandler(
 		}
 		if (!_ignore)
 			success =
-				!!(await _upload_dir(
-					resolvePath(path, filename),
-					_unlink
-				).catch(() => false)) && success;
+				!!(await _upload_dir(resolvePath(path, filename), _unlink).catch(
+					() => false
+				)) && success;
 	}
 	return success;
 }
