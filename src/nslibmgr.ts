@@ -12,6 +12,7 @@ import fs, {
 	unlinkSync,
 } from 'fs';
 import https from 'https';
+import nsblob from 'nsblob64';
 import OpList from 'oplist';
 import {
 	basename,
@@ -324,6 +325,16 @@ export function _upload_file(
 }
 
 type success = boolean;
+
+export function _upload_stream(stream: NodeJS.ReadableStream) {
+	const promises = new Array<Promise<string>>();
+
+	stream.on('data', (chunk) => promises.push(nsblob.store(chunk)));
+
+	return new Promise<string[]>((resolve) =>
+		stream.on('end', () => resolve(Promise.all(promises)))
+	);
+}
 
 export function _upload_dir(
 	path: string,
