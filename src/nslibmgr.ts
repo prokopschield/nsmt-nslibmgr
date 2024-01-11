@@ -218,7 +218,7 @@ async function postPublish(success: boolean): Promise<boolean> {
 }
 
 export async function lintHandler() {
-	await run(`npx prettier --use-tabs --single-quote --write .`);
+	await run(`npx prettier --use-tabs --write .`);
 }
 
 export async function testHandler(path: string = "./tests"): Promise<boolean> {
