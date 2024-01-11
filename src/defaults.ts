@@ -43,6 +43,7 @@ export const CLOUD_HANDLER_KEEP = [
 	".gitmodules",
 	".gitignore",
 	".npmignore",
+	".nslibrc",
 	".eslintignore",
 	".prettierignore",
 	".prettierrc.js",

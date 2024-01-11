@@ -21,6 +21,7 @@ import {
 } from "path";
 import io from "serial-async-io";
 import { ask, readline } from "./ask";
+import * as config from "./config";
 import run from "./run";
 import selector from "./selector";
 import semver from "./semver";
@@ -34,9 +35,6 @@ export enum ERROR {
 	INVALID_USAGE = "This utility does not support either your terminal, or the way you're using it.",
 	SIZE_LIMIT_EXCEEDED = "Size limit exceeded.",
 }
-
-import DEFAULTS from "./defaults";
-export { DEFAULTS };
 
 export async function creativeHandler(path: string = "."): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
@@ -388,10 +386,10 @@ export function _upload_dir(
 export async function cloudHandler(
 	path: string = ".",
 	{
-		ignore = DEFAULTS.CLOUD_HANDLER_IGNORE,
-		keep = DEFAULTS.CLOUD_HANDLER_KEEP,
-		unlink = DEFAULTS.CLOUD_HANDLER_UNLINK,
-		unlink_by_default = false,
+		ignore = config.ignore,
+		keep = config.keep,
+		unlink = config.unlink,
+		unlink_by_default = Boolean(config.config.unlink_by_default),
 	}: {
 		ignore?: string[];
 		keep?: string[];
