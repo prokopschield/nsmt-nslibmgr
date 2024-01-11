@@ -1,4 +1,4 @@
-import * as json from 'doge-json';
+import * as json from "doge-json";
 import fs, {
 	existsSync,
 	mkdirSync,
@@ -10,54 +10,54 @@ import fs, {
 	lstatSync,
 	readlinkSync,
 	unlinkSync,
-} from 'fs';
-import https from 'https';
-import nsblob from 'nsblob64';
-import OpList from 'oplist';
+} from "fs";
+import https from "https";
+import nsblob from "nsblob64";
+import OpList from "oplist";
 import {
 	basename,
 	resolve as resolvePath,
 	relative as relativePath,
-} from 'path';
-import io from 'serial-async-io';
-import { ask, readline } from './ask';
-import run from './run';
-import selector from './selector';
-import semver from './semver';
-import tsconfig from './tsconfig';
+} from "path";
+import io from "serial-async-io";
+import { ask, readline } from "./ask";
+import run from "./run";
+import selector from "./selector";
+import semver from "./semver";
+import tsconfig from "./tsconfig";
 
-export const gitignore = new OpList('.gitignore');
-export const npmignore = new OpList('.npmignore');
+export const gitignore = new OpList(".gitignore");
+export const npmignore = new OpList(".npmignore");
 
 export enum ERROR {
-	ABORTED = 'Aborted.',
+	ABORTED = "Aborted.",
 	INVALID_USAGE = "This utility does not support either your terminal, or the way you're using it.",
-	SIZE_LIMIT_EXCEEDED = 'Size limit exceeded.',
+	SIZE_LIMIT_EXCEEDED = "Size limit exceeded.",
 }
 
-import DEFAULTS from './defaults';
+import DEFAULTS from "./defaults";
 export { DEFAULTS };
 
-export async function creativeHandler(path: string = '.'): Promise<boolean> {
+export async function creativeHandler(path: string = "."): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
-		let src = resolvePath(path, 'src');
+		let src = resolvePath(path, "src");
 		if (!existsSync(src)) {
 			mkdirSync(src);
 		}
 		const dir = await fs.promises.readdir(src);
 		let index = resolvePath(
 			src,
-			dir.filter((a) => a && a !== 'cli.ts').shift() || 'index.ts'
+			dir.filter((a) => a && a !== "cli.ts").shift() || "index.ts"
 		);
 		if (!existsSync(index)) {
-			await io.write(index, '');
+			await io.write(index, "");
 		}
-		let cli = resolvePath(src, 'cli.ts');
+		let cli = resolvePath(src, "cli.ts");
 		if (!existsSync(cli)) {
-			await io.write(cli, '#!/usr/bin/env node\n');
+			await io.write(cli, "#!/usr/bin/env node\n");
 		}
-		gitignore.add('node_modules/');
-		const packjsonpath = resolvePath(path, 'package.json');
+		gitignore.add("node_modules/");
+		const packjsonpath = resolvePath(path, "package.json");
 		let defaults: {
 			[key: string]:
 				| string
@@ -69,7 +69,7 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 			defaults = json.read(packjsonpath);
 		}
 
-		const name = defaults.name || (await ask('Enter package name'));
+		const name = defaults.name || (await ask("Enter package name"));
 
 		for (const [key, value] of Object.entries(defaults)) {
 			if (!value) delete defaults[key];
@@ -85,21 +85,22 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 			...{
 				name,
 				description:
-					defaults.description || (await ask('Please enter a description')),
-				version: defaults.version || '0.0.0',
-				main: defaults.main || 'lib/index.js',
+					defaults.description ||
+					(await ask("Please enter a description")),
+				version: defaults.version || "0.0.0",
+				main: defaults.main || "lib/index.js",
 				bin: defaults.bin || {
-					[String(name)]: 'lib/cli.js',
+					[String(name)]: "lib/cli.js",
 				},
 				scripts:
-					typeof defaults.scripts === 'object'
+					typeof defaults.scripts === "object"
 						? {
-								start: 'node lib/cli',
+								start: "node lib/cli",
 								...defaults.scripts,
 						  }
 						: {
-								start: 'node lib/cli',
-								test: 'npx nslibmgr test',
+								start: "node lib/cli",
+								test: "npx nslibmgr test",
 						  },
 				author: defaults.author || (await ask("Author's name?")),
 			},
@@ -107,27 +108,31 @@ export async function creativeHandler(path: string = '.'): Promise<boolean> {
 		};
 
 		pacjson.dependencies =
-			typeof pacjson.dependencies === 'object'
+			typeof pacjson.dependencies === "object"
 				? { ...pacjson.dependencies }
 				: {};
 
 		pacjson.devDependencies =
-			typeof pacjson.devDependencies === 'object'
+			typeof pacjson.devDependencies === "object"
 				? { ...pacjson.devDependencies }
 				: {};
-		if (!pacjson.devDependencies['@types/node'])
-			pacjson.devDependencies['@types/node'] = `>=${process.version.substr(
-				1,
-				2
-			)}`;
+		if (!pacjson.devDependencies["@types/node"])
+			pacjson.devDependencies[
+				"@types/node"
+			] = `>=${process.version.substr(1, 2)}`;
 
 		for (const key of Object.keys(pacjson)) {
 			if (!pacjson[key]) {
-				defaults[key] ? (pacjson[key] = defaults[key]) : delete pacjson[key];
+				defaults[key]
+					? (pacjson[key] = defaults[key])
+					: delete pacjson[key];
 			}
 		}
-		await io.write(packjsonpath, JSON.stringify(pacjson, null, '\t') + '\n');
-		await run('npm init -y');
+		await io.write(
+			packjsonpath,
+			JSON.stringify(pacjson, null, "\t") + "\n"
+		);
+		await run("npm init -y");
 		json.write(packjsonpath, json.read(packjsonpath));
 		if (!pacjson.license) gpl();
 		return resolve(true);
@@ -149,31 +154,33 @@ function gitignore_set(
 	}
 }
 
-const publish_options = ['npm', 'yarn'];
+const publish_options = ["npm", "yarn"];
 
-export function publishHandler(path: string = '.'): Promise<boolean> {
+export function publishHandler(path: string = "."): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		await lintHandler();
-		const file = resolvePath(path, 'package.json');
+		const file = resolvePath(path, "package.json");
 		const pacjson = require(file);
-		if (!pacjson.version) pacjson.version = '0.0.0-0';
+		if (!pacjson.version) pacjson.version = "0.0.0-0";
 		const ov = pacjson.version;
 		pacjson.version = semver(
 			pacjson.version,
-			await selector('Release type?', {
-				pp: `pre-release (${semver(pacjson.version, 'pp')})`,
-				p: `patch (${semver(pacjson.version, 'p')})`,
-				pm: `pre-minor (${semver(pacjson.version, 'pm')})`,
-				m: `minor (${semver(pacjson.version, 'm')})`,
-				pM: `pre-major (${semver(pacjson.version, 'pM')})`,
-				M: `major (${semver(pacjson.version, 'M')})`,
+			await selector("Release type?", {
+				pp: `pre-release (${semver(pacjson.version, "pp")})`,
+				p: `patch (${semver(pacjson.version, "p")})`,
+				pm: `pre-minor (${semver(pacjson.version, "pm")})`,
+				m: `minor (${semver(pacjson.version, "m")})`,
+				pM: `pre-major (${semver(pacjson.version, "pM")})`,
+				M: `major (${semver(pacjson.version, "M")})`,
 			})
 		);
 		if (
 			!fs.existsSync(
 				resolvePath(
-					'.',
-					pacjson.main.includes('.js') ? pacjson.main : `${pacjson.main}.js`
+					".",
+					pacjson.main.includes(".js")
+						? pacjson.main
+						: `${pacjson.main}.js`
 				)
 			)
 		) {
@@ -183,32 +190,32 @@ export function publishHandler(path: string = '.'): Promise<boolean> {
 		}
 		console.log(`Publish ${pacjson.name} version ${pacjson.version}?`);
 		console.log('Type "publish" to publish.');
-		if ((await readline()) === 'publish') {
-			console.log(`Publish where? (${publish_options.join(', ')})`);
+		if ((await readline()) === "publish") {
+			console.log(`Publish where? (${publish_options.join(", ")})`);
 			json.write(file, pacjson);
-			gitignore_set('lib', false);
-			gitignore_set('node_modules', true, true);
-			npmignore.add(...gitignore.entries, 'src/', 'tsconfig.json');
-			npmignore.remove('lib');
-			switch ((await readline()) || 'yarn') {
-				case 'npm': {
-					return run('npm publish').then(postPublish).then(resolve);
+			gitignore_set("lib", false);
+			gitignore_set("node_modules", true, true);
+			npmignore.add(...gitignore.entries, "src/", "tsconfig.json");
+			npmignore.remove("lib");
+			switch ((await readline()) || "yarn") {
+				case "npm": {
+					return run("npm publish").then(postPublish).then(resolve);
 				}
-				case 'yarn': {
-					return run('yarn publish').then(postPublish).then(resolve);
+				case "yarn": {
+					return run("yarn publish").then(postPublish).then(resolve);
 				}
 			}
 		}
 		pacjson.version = ov;
 		json.write(file, pacjson);
-		gitignore_set('lib', true, true);
-		console.log('Publishing aborted!');
+		gitignore_set("lib", true, true);
+		console.log("Publishing aborted!");
 		reject(ERROR.ABORTED);
 	});
 }
 
 async function postPublish(success: boolean): Promise<boolean> {
-	success &&= gitignore_set('lib', true, true);
+	success &&= gitignore_set("lib", true, true);
 	return success;
 }
 
@@ -216,13 +223,13 @@ export async function lintHandler() {
 	await run(`npx prettier --use-tabs --single-quote --write .`);
 }
 
-export async function testHandler(path: string = './tests'): Promise<boolean> {
+export async function testHandler(path: string = "./tests"): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		const files = readdirSync(path);
 		for (const filename of files) {
 			const file = resolvePath(path, filename);
 			const test = require(file);
-			if (typeof test === 'function') {
+			if (typeof test === "function") {
 				await test();
 			}
 			console.log(`Finished test ${filename}`);
@@ -265,12 +272,12 @@ export async function copy(from: string, to: string): Promise<boolean> {
 	}
 }
 
-export function compileHandler(path: string = '.'): Promise<boolean> {
+export function compileHandler(path: string = "."): Promise<boolean> {
 	return new Promise((resolve, _reject) => {
 		tsconfig.__save();
-		return run(process.env.NSLIBMGR_USE_PNPM ? 'pnpm i' : 'yarn')
-			.then(async (suc: boolean) => suc && (await run('tsc')))
-			.then(async (suc: boolean) => (await copy('src', 'lib')) && suc)
+		return run(process.env.NSLIBMGR_USE_PNPM ? "pnpm i" : "yarn")
+			.then(async (suc: boolean) => suc && (await run("tsc")))
+			.then(async (suc: boolean) => (await copy("src", "lib")) && suc)
 			.then(resolve);
 	});
 }
@@ -302,10 +309,10 @@ type success = boolean;
 export function _upload_stream(stream: NodeJS.ReadableStream) {
 	const promises = new Array<Promise<string>>();
 
-	stream.on('data', (chunk) => promises.push(nsblob.store(chunk)));
+	stream.on("data", (chunk) => promises.push(nsblob.store(chunk)));
 
 	return new Promise<string[]>((resolve) =>
-		stream.on('end', () => resolve(Promise.all(promises)))
+		stream.on("end", () => resolve(Promise.all(promises)))
 	);
 }
 
@@ -343,12 +350,18 @@ export function _upload_dir(
 								unlinkSync(file);
 							}
 						} else {
-							console.log(`Directory ${file}->${linked} processing failed!`);
+							console.log(
+								`Directory ${file}->${linked} processing failed!`
+							);
 						}
 					} else if (await _upload_file(file, unlink)) {
-						console.log(`File ${file}->${linked} processed successfully.`);
+						console.log(
+							`File ${file}->${linked} processed successfully.`
+						);
 					} else {
-						console.log(`Symlink ${file}->${linked} processing failed!`);
+						console.log(
+							`Symlink ${file}->${linked} processing failed!`
+						);
 						++hasFailed;
 					}
 				} else {
@@ -373,7 +386,7 @@ export function _upload_dir(
 }
 
 export async function cloudHandler(
-	path: string = '.',
+	path: string = ".",
 	{
 		ignore = DEFAULTS.CLOUD_HANDLER_IGNORE,
 		keep = DEFAULTS.CLOUD_HANDLER_KEEP,
@@ -403,9 +416,10 @@ export async function cloudHandler(
 		}
 		if (!_ignore)
 			success =
-				!!(await _upload_dir(resolvePath(path, filename), _unlink).catch(
-					() => false
-				)) && success;
+				!!(await _upload_dir(
+					resolvePath(path, filename),
+					_unlink
+				).catch(() => false)) && success;
 	}
 	return success;
 }
@@ -413,13 +427,13 @@ export async function cloudHandler(
 export function gpl(): boolean {
 	try {
 		fs.writeFileSync(
-			'./LICENSE.md',
-			fs.readFileSync(resolvePath(__dirname, '..', 'gpl-3.0.md'))
+			"./LICENSE.md",
+			fs.readFileSync(resolvePath(__dirname, "..", "gpl-3.0.md"))
 		);
-		if (fs.existsSync('./LICENSE')) fs.unlinkSync('./LICENSE');
-		const pacjson = json.read('./package.json');
-		pacjson.license = 'GPL-3.0-or-later';
-		json.write('./package.json', pacjson);
+		if (fs.existsSync("./LICENSE")) fs.unlinkSync("./LICENSE");
+		const pacjson = json.read("./package.json");
+		pacjson.license = "GPL-3.0-or-later";
+		json.write("./package.json", pacjson);
 		return true;
 	} catch (error) {
 		return false;

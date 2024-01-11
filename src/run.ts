@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec } from "child_process";
 
 /**
  * Executes shell command
@@ -12,11 +12,11 @@ export function run(cmd: string): Promise<boolean> {
 			resolve(!stderr && !error)
 		);
 		if (process.stdout && child.stdout)
-			child.stdout.on('data', (chunk: Buffer) =>
+			child.stdout.on("data", (chunk: Buffer) =>
 				process.stdout.write(chunk)
 			);
 		if (process.stderr && child.stderr)
-			child.stderr.on('data', (chunk: Buffer) =>
+			child.stderr.on("data", (chunk: Buffer) =>
 				process.stderr.write(chunk)
 			);
 	});
