@@ -10,6 +10,8 @@ function FAILURE() {
 const RESULT = (res: any) => (res ? SUCCESS : FAILURE());
 
 import { exec } from "child_process";
+import { socket } from "nsblob64";
+
 import {
 	creativeHandler,
 	publishHandler,
@@ -185,6 +187,6 @@ new Promise(async (accept, reject) => {
 })
 	.then((...args: any[]) => {
 		console.log("Finished!", args);
-		process.exit(0);
+		socket.close();
 	})
 	.catch(console.log);
