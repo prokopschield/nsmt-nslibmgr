@@ -1,6 +1,6 @@
 export function semver(
 	ver: string,
-	type: 'M' | 'm' | 'p' | 'pM' | 'pm' | 'pp' | string
+	type: "M" | "m" | "p" | "pM" | "pm" | "pp" | string
 ): string {
 	let [maj, min, pat, pre] = [
 		...ver.split(/[^0-9]/g).map((a) => +a),
@@ -12,12 +12,12 @@ export function semver(
 	if (type.length == 2) {
 		if (pre) {
 			if (
-				type === 'pp' ||
-				(type === 'pm' && !pat) ||
-				(type === 'pM' && !pat && !min)
+				type === "pp" ||
+				(type === "pm" && !pat) ||
+				(type === "pM" && !pat && !min)
 			) {
 				++pre;
-			} else if (type === 'pm') {
+			} else if (type === "pm") {
 				++min;
 				pre = 1;
 				pat = 0;
@@ -28,13 +28,13 @@ export function semver(
 			}
 		} else {
 			switch (type[1]) {
-				case 'M': {
+				case "M": {
 					++maj;
 					++pre;
 					min = pat = 0;
 					break;
 				}
-				case 'm': {
+				case "m": {
 					++min;
 					++pre;
 					pat = 0;
@@ -48,7 +48,7 @@ export function semver(
 		}
 	} else
 		switch (type[0]) {
-			case 'M': {
+			case "M": {
 				if (pre && !pat && !min) {
 					min = pat = pre = 0;
 				} else {
@@ -56,7 +56,7 @@ export function semver(
 				}
 				break;
 			}
-			case 'm': {
+			case "m": {
 				if (pre && !pat) {
 					pat = pre = 0;
 				} else {
@@ -68,7 +68,7 @@ export function semver(
 				pre ? (pre = 0) : (++pat, (pre = 0));
 			}
 		}
-	return `${maj}.${min}.${pat}${pre ? '-' + pre : ''}`;
+	return `${maj}.${min}.${pat}${pre ? "-" + pre : ""}`;
 }
 
 export default semver;

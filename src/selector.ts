@@ -1,7 +1,7 @@
-import prompts from 'prompts';
+import prompts from "prompts";
 
 // Do no change this.
-const NAME = 'NAME';
+const NAME = "NAME";
 
 export async function selector(
 	question: string,
@@ -11,7 +11,7 @@ export async function selector(
 ): Promise<string> {
 	return prompts([
 		{
-			type: 'select',
+			type: "select",
 			name: NAME,
 			message: question,
 			choices: Object.entries(options).map(([value, title]) => ({

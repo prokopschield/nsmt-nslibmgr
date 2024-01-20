@@ -1,23 +1,23 @@
-import { Config } from 'doge-config';
+import { Config } from "doge-config";
 
 class TSConfig extends Config {
 	constructor() {
 		super(
-			'tsconfig',
+			"tsconfig",
 			{
 				compilerOptions: {
-					target: 'ES2018',
-					module: 'CommonJS',
+					target: "ES2018",
+					module: "CommonJS",
 					declaration: true,
-					outDir: './lib',
+					outDir: "./lib",
 					esModuleInterop: true,
 					strict: true,
 					forceConsistentCasingInFileNames: true,
 				},
-				include: ['src/**/*'],
+				include: ["src/**/*"],
 				exclude: [],
 			},
-			'.'
+			"."
 		);
 	}
 }
