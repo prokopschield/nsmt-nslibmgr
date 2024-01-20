@@ -22,7 +22,7 @@
 		"serial-async-io": "^0.3.2"
 	},
 	"devDependencies": {
-		"@types/node": ">=14",
+		"@types/node": "^18",
 		"@types/prompts": "^2.0.14"
 	},
 	"directories": {
