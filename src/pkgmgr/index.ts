@@ -1,7 +1,7 @@
 import fs from "fs";
 import { once } from "ps-std";
 
-import { config, directory } from "../config";
+import { config, directory, keep } from "../config";
 import { gitignore } from "../nslibmgr";
 import { Yarn, pkgmgrs } from "./pkgmgrs";
 
@@ -35,6 +35,10 @@ export const pkgmgr = once(() => {
 	const mgr = pick_pkgmgr();
 
 	config.pkgmgr = mgr.binary || "";
+
+	if (!keep.includes(mgr.lockfile)) {
+		keep.push(mgr.lockfile);
+	}
 
 	return mgr;
 });
