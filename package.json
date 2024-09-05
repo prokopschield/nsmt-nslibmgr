@@ -19,6 +19,7 @@
 		"nsblob64": "^0.2.24",
 		"oplist": "^0.0.0-7",
 		"prompts": "^2.4.2",
+		"ps-std": "^0.1.45",
 		"serial-async-io": "^0.3.2"
 	},
 	"devDependencies": {
