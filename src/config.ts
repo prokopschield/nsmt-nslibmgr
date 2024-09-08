@@ -68,6 +68,8 @@ for (const [key, value] of Object.entries(config)) {
 	}
 }
 
+export const directory = String((config.directory ||= "."));
+
 if (!("unlink_by_default" in config)) {
 	config.unlink_by_default = false;
 }

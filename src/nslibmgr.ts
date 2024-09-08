@@ -22,6 +22,7 @@ import {
 import io from "serial-async-io";
 import { ask, readline } from "./ask";
 import * as config from "./config";
+import { pkgmgr } from "./pkgmgr";
 import run from "./run";
 import selector from "./selector";
 import semver from "./semver";
@@ -270,16 +271,6 @@ export async function copy(from: string, to: string): Promise<boolean> {
 	} catch (error) {
 		return false;
 	}
-}
-
-export function compileHandler(path: string = "."): Promise<boolean> {
-	return new Promise((resolve, _reject) => {
-		tsconfig.__save();
-		return run(process.env.NSLIBMGR_USE_PNPM ? "pnpm i" : "yarn")
-			.then(async (suc: boolean) => suc && (await run("tsc")))
-			.then(async (suc: boolean) => (await copy("src", "lib")) && suc)
-			.then(resolve);
-	});
 }
 
 let warnedAboutSymlinkSupport = false;
