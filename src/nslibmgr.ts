@@ -273,16 +273,6 @@ export async function copy(from: string, to: string): Promise<boolean> {
 	}
 }
 
-export function compileHandler(path: string = "."): Promise<boolean> {
-	return new Promise((resolve, _reject) => {
-		tsconfig.__save();
-		return pkgmgr().install()
-			.then(async (suc: boolean) => suc && (await run("tsc")))
-			.then(async (suc: boolean) => (await copy("src", "lib")) && suc)
-			.then(resolve);
-	});
-}
-
 let warnedAboutSymlinkSupport = false;
 function warnSymlinkSupport() {
 	if (!warnedAboutSymlinkSupport) {
