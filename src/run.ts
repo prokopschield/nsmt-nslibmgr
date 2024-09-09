@@ -8,9 +8,9 @@ import { exec } from "child_process";
  */
 export function run(cmd: string): Promise<boolean> {
 	return new Promise((resolve) => {
-		const child = exec(cmd, (error, _stdout, stderr) =>
-			resolve(!stderr && !error)
-		);
+		const child = exec(cmd, (error, _stdout, stderr) => {
+			setTimeout(() => resolve(!stderr && !error), 7);
+		});
 		if (process.stdout && child.stdout)
 			child.stdout.on("data", (chunk: Buffer) =>
 				process.stdout.write(chunk)
