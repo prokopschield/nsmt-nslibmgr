@@ -1,7 +1,7 @@
 {
 	"name": "nslibmgr",
 	"description": "NodeSite.eu library manager for open-source projects.",
-	"version": "0.2.24-1",
+	"version": "0.2.24-4",
 	"main": "lib/index",
 	"bin": {
 		"nslibmgr": "lib/cli.js"
