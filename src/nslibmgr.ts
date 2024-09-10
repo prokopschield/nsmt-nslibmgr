@@ -19,6 +19,7 @@ import {
 	resolve as resolvePath,
 	relative as relativePath,
 } from "path";
+import { delay } from "ps-std";
 import io from "serial-async-io";
 import { ask, readline } from "./ask";
 import * as config from "./config";
@@ -194,6 +195,8 @@ export function publishHandler(path: string = "."): Promise<boolean> {
 		if ((await readline()) === "publish") {
 			console.log(`Publish where? (${publish_options.join(", ")})`);
 			json.write(file, pacjson);
+			await run("git add .");
+			await run(`git commit -m "Release: v${pacjson.version}"`);
 			gitignore_set("lib", false);
 			gitignore_set("node_modules", true, true);
 			npmignore.add(...gitignore.entries, "src/", "tsconfig.json");
