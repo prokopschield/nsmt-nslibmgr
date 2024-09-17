@@ -9,8 +9,8 @@ const config: Record<string, unknown> = { format: false, ...read(cfile) };
 const errors = Array.isArray(config.error)
 	? config.error
 	: "error" in config
-	? [config.error]
-	: [];
+		? [config.error]
+		: [];
 
 config.error = errors;
 

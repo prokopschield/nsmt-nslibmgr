@@ -90,11 +90,11 @@ export async function creativeHandler(path: string = "."): Promise<boolean> {
 						? {
 								start: "node lib/cli",
 								...defaults.scripts,
-						  }
+							}
 						: {
 								start: "node lib/cli",
 								test: "npx nslibmgr test",
-						  },
+							},
 				author: defaults.author || (await ask("Author's name?")),
 			},
 			...defaults,
