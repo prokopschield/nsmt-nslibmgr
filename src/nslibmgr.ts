@@ -5,25 +5,18 @@ import fs, {
 	readdirSync,
 	createReadStream,
 	statSync,
-	unlink as unlinkFile,
 	rmdir as unlinkDir,
 	lstatSync,
 	readlinkSync,
 	unlinkSync,
 } from "fs";
-import https from "https";
 import nsblob from "nsblob64";
 import OpList from "oplist";
-import {
-	basename,
-	resolve as resolvePath,
-	relative as relativePath,
-} from "path";
-import { delay } from "ps-std";
+import { resolve as resolvePath } from "path";
 import io from "serial-async-io";
 import { ask, readline } from "./ask";
+import { compile } from "./compile";
 import * as config from "./config";
-import { pkgmgr } from "./pkgmgr";
 import run from "./run";
 import selector from "./selector";
 import semver from "./semver";
@@ -272,6 +265,18 @@ export async function copy(from: string, to: string): Promise<boolean> {
 		}
 		return success;
 	} catch (error) {
+		return false;
+	}
+}
+
+export async function compileHandler(): Promise<boolean> {
+	try {
+		tsconfig.__save();
+
+		return await compile();
+	} catch (error) {
+		console.error(error);
+
 		return false;
 	}
 }

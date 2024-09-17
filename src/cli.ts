@@ -12,8 +12,8 @@ const RESULT = (res: any) => (res ? SUCCESS : FAILURE());
 import { exec } from "child_process";
 import { socket } from "nsblob64";
 
-import { compile } from "./compile";
 import {
+	compileHandler,
 	creativeHandler,
 	publishHandler,
 	cloudHandler,
@@ -46,7 +46,7 @@ new Promise(async (accept, reject) => {
 			case "c":
 			case "m":
 				console.log("Compiling!");
-				console.log(RESULT(await compile()));
+				console.log(RESULT(await compileHandler()));
 				break;
 			case "install":
 				console.log("Installing!");
@@ -155,7 +155,7 @@ new Promise(async (accept, reject) => {
 					)
 				);
 				console.log("Compiling!");
-				console.log(RESULT(await compile()));
+				console.log(RESULT(await compileHandler()));
 				console.log("Running!");
 				await new Promise((resolve) => {
 					const child = exec(
