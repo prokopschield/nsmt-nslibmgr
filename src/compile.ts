@@ -56,13 +56,17 @@ export async function transform(file: string) {
 
 export async function traverse(directory = "lib") {
 	for (const name of await fs.promises.readdir(directory)) {
-		const file = path.resolve(directory, name);
-		const stats = await fs.promises.stat(file);
+		try {
+			const file = path.resolve(directory, name);
+			const stats = await fs.promises.stat(file);
 
-		if (stats.isDirectory()) {
-			await traverse(file);
-		} else if (file.endsWith(".js")) {
-			await transform(file);
+			if (stats.isDirectory()) {
+				await traverse(file);
+			} else if (file.endsWith(".js")) {
+				await transform(file);
+			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 }
