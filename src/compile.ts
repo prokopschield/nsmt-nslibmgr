@@ -55,20 +55,16 @@ export async function transform(file: string) {
 }
 
 export async function traverse(directory = "lib") {
-	const promises = new Array<Promise<void>>();
-
 	for (const name of await fs.promises.readdir(directory)) {
 		const file = path.resolve(directory, name);
 		const stats = await fs.promises.stat(file);
 
 		if (stats.isDirectory()) {
-			promises.push(traverse(file));
+			await traverse(file);
 		} else if (file.endsWith(".js")) {
-			promises.push(transform(file));
+			await transform(file);
 		}
 	}
-
-	await Promise.all(promises);
 }
 
 export async function linkOrCopyFile(src: string, dest: string) {
